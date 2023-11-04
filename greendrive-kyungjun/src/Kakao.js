@@ -52,8 +52,9 @@ const Kakao = ({ searchPlace }) => {
     <div
       id="Map"
       style={{
-        width: "500px",
+        width: "100%",
         height: "500px",
+        zIndex: "0",
       }}
     ></div>
   );
