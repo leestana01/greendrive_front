@@ -10,10 +10,11 @@ const Container = styled.div`
   text-align: center;
   background-color: #fffff;
   -ms-overflow-style: none;
+  max-width: 100%; /* 페이지가 화면보다 넓어지지 않도록 최대 너비를 100%로 설정합니다. */
 
   /* 미디어 쿼리 적용 */
   @media (hover: hover) {
-    width: 390px;
+    width: 100%; /* 가로 스크롤을 제거하기 위해 너비를 100%로 설정합니다. */
     margin: 0 auto;
   }
 
@@ -21,7 +22,6 @@ const Container = styled.div`
     display: none;
   }
 `;
-
 const BodyWrapper = styled.div`
   flex: 1; /* 남은 공간을 채우도록 설정 */
   overflow: auto; /* 스크롤이 있는 경우 내용을 스크롤합니다. */
@@ -90,7 +90,7 @@ const Subtitle = styled.div`
   line-height: normal;
   letter-spacing: -0.333px;
   text-align: left;
-  width: 27%;
+  width: 340px;
   margin: 0 auto; /* 화면 중앙에 위치하도록 수정 */
   max-width: 950px; /* 최대 너비를 설정하여 화면 크기가 커져도 너무 넓어지지 않도록 함 */
   padding: 0 20px; /* 좌우 여백을 추가하여 너비 조정 */
@@ -227,6 +227,59 @@ const CheckboxText = styled.div`
   font-weight: 300;
   line-height: normal;
 `;
+
+const PhoneNumberContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+`;
+
+const PhoneNumberSelect = styled.select`
+  margin-right: 10px;
+  width: 100px;
+  height: 50px;
+  border-radius: 6px;
+`;
+
+const PhoneNumberInput = styled.input`
+  width: 230px;
+  height: 50px;
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #60716f;
+  margin: auto;
+
+  font-size: 17px;
+  &::placeholder {
+    color: #60716f;
+    padding-left: 10px;
+  }
+  &:focus {
+    outline: none;
+    border-color: #60716f; /* 클릭 시 테두리 색상을 원래 테두리 색상으로 설정 */
+  }
+`;
+
+const CarSelect = styled.select`
+  width: 345px; /* 휴대폰 번호 드롭박스와 동일한 너비로 설정 */
+  height: 55px; /* 휴대폰 번호 드롭박스와 동일한 높이로 설정 */
+  border: 1px solid #60716f; // 드롭다운 박스의 테두리를 추가합니다.
+  border-radius: 6px;
+  appearance: none;
+  padding: 0 10px;
+  font-size: 17px;
+  background: #ffffff;
+  margin: auto;
+  &:focus {
+    outline: none;
+    border-color: #60716f;
+  }
+`;
+
+const StyledOption = styled.option`
+  color: #60716f;
+`;
+
 const Join = () => {
   const navigate = useNavigate();
   const navigateToFirstpage = () => {
@@ -235,6 +288,13 @@ const Join = () => {
   const navigateToSignupcard = () => {
     navigate("/Login");
   };
+
+  const carOptions = [
+    "전기차",
+    "수소전기차",
+    "하이브리드차",
+    "플러그인 하이브리드차",
+  ];
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -253,6 +313,7 @@ const Join = () => {
   const [divs, setDivs] = useState([]);
   const [failDivAdded, setFailDivAdded] = useState(false);
   const [errorText, setErrorText] = useState("");
+  const [phoneFirst, setPhoneFirst] = useState("010");
 
   const [emailError, setEmailError] = useState(false); // 이메일 형식 에러 상태
   const [emailErrorMessage, setEmailErrorMessage] = useState(""); // 이메일 에러 메시지
@@ -278,7 +339,11 @@ const Join = () => {
     validateEmail(newEmail);
   };
 
-  const onClick = () => {
+  const handlePhoneFirstChange = (e) => {
+    setPhoneFirst(e.target.value);
+  };
+
+  const onClick = async () => {
     // 사용자 입력 데이터를 서버로 전송하는 로직을 추가합니다.
     const userData = {
       email: email,
@@ -291,16 +356,14 @@ const Join = () => {
     };
 
     const BACKEND_URL = "" || "";
-    axios
-      .post(`${BACKEND_URL}/api/signup/`, userData)
-      .then((response) => {
-        console.log("회원가입 성공:", response.data);
-        navigate("/Login");
-      })
-      .catch((error) => {
-        console.log("회원가입 실패:");
-        errorHandler(error);
-      });
+    try {
+      const response = await axios.post(`${BACKEND_URL}/login/`, userData);
+      console.log("회원가입 성공:", response.data);
+      navigate("/Login");
+    } catch (error) {
+      console.log("회원가입 실패:");
+      errorHandler(error);
+    }
   };
   const errorHandler = (error) => {
     if (error.response) {
@@ -361,6 +424,31 @@ const Join = () => {
   const handleCheckboxChange = (e) => {
     setIsChecked(e.target.checked);
   };
+  // 모든 입력 상태를 추적하는 상태 변수
+  const [allFieldsFilled, setAllFieldsFilled] = useState(false);
+
+  // 모든 입력란이 채워져 있는지 확인하는 함수
+  const checkAllFieldsFilled = () => {
+    if (
+      email &&
+      password &&
+      password_check &&
+      name &&
+      nickname &&
+      car &&
+      phone &&
+      isChecked
+    ) {
+      setAllFieldsFilled(true);
+    } else {
+      setAllFieldsFilled(false);
+    }
+  };
+
+  // useEffect를 사용하여 모든 입력 상태가 변경될 때마다 checkAllFieldsFilled 함수를 실행합니다.
+  useEffect(() => {
+    checkAllFieldsFilled();
+  }, [email, password, password_check, name, nickname, car, phone, isChecked]);
 
   const url1 =
     "https://harvest-machine-d20.notion.site/77980ca8efd3435e9915e88b830a5ca4";
@@ -441,21 +529,35 @@ const Join = () => {
           )}
 
           <Subtitle>친환경 자동차 종류</Subtitle>
-          <InputBox>
-            <Input
-              type="text"
-              placeholder="친환경 자동차 종류를 입력해주세요"
-              onChange={(e) => setCar(e.target.value)}
-            />
-          </InputBox>
+
+          <CarSelect value={car} onChange={(e) => setCar(e.target.value)}>
+            <StyledOption value="">
+              친환경 자동차 종류를 선택해주세요
+            </StyledOption>
+            {carOptions.map((option, index) => (
+              <StyledOption key={index} value={option}>
+                {option}
+              </StyledOption>
+            ))}
+          </CarSelect>
+
           <Subtitle>휴대폰 번호</Subtitle>
-          <InputBox>
-            <Input
+          <PhoneNumberContainer>
+            <PhoneNumberSelect
+              value={phoneFirst}
+              onChange={handlePhoneFirstChange}
+            >
+              <option value="010">010</option>
+              <option value="011">011</option>
+              <option value="080">080</option>
+              {/* 필요한 다른 전화번호 앞 세 자리를 추가하세요 */}
+            </PhoneNumberSelect>
+            <PhoneNumberInput
               type="phone"
               placeholder="전화번호를 입력해주세요"
               onChange={(e) => setPhone(e.target.value)}
             />
-          </InputBox>
+          </PhoneNumberContainer>
           <div className="failDiv" style={failStyle}>
             {errorText}
           </div>
@@ -493,8 +595,8 @@ const Join = () => {
             <GreenBox
               onClick={onClick}
               style={{
-                pointerEvents: isChecked ? "auto" : "none",
-                opacity: isChecked ? 1 : 0.5,
+                pointerEvents: allFieldsFilled ? "auto" : "none",
+                opacity: allFieldsFilled ? 1 : 0.5,
               }}
             >
               <Greentext>확인</Greentext>
