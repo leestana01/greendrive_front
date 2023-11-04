@@ -60,7 +60,7 @@ const Bookmark = styled.div`
   justify-content: space-between;
 `;
 const BookmarkElements = styled.div`
-  width: 140px;
+  width: 42%;
   height: 60px;
   text-align: left;
   border-radius: 10px;
@@ -134,10 +134,10 @@ function LandingPage() {
         </InputFrom>
         <Bookmark>
             {bookmarkList.map((item, index) => (
-              <BookmarkElements onClick={gotoBookmarkDetails}>
-                <FaRegBookmark size="15" color="green"/>
-                <h5 key={index}>{item.주차장명}</h5>
-                <p key={index}>{item.소재지도로명주소}</p>
+              <BookmarkElements onClick={gotoBookmarkDetails} key={index} >
+                <FaRegBookmark size="15" color="green" />
+                <h5>{item.주차장명}</h5>
+                <p>{item.소재지도로명주소}</p>
               </BookmarkElements>
             ))}
           </Bookmark>

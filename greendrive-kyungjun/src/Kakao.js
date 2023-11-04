@@ -1,8 +1,33 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 const { kakao } = window;
 
 const Kakao = ({ searchPlace }) => {
+  const [map, setMap] = useState(null);
+  useEffect(() => {
+    const container = document.getElementById("Map");
+
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        console.log("현재 위치의 위도:", latitude);
+        console.log("현재 위치의 경도:", longitude);
+
+        const options = {
+          center: new kakao.maps.LatLng(latitude, longitude),
+          level: 3,
+        };
+
+        const newMap = new kakao.maps.Map(container, options);
+        setMap(newMap); // map 상태 업데이트
+      });
+    } else {
+      console.log("Geolocation을 지원하지 않는 브라우저입니다.");
+    }
+  }, []);
+
   useEffect(() => {
     var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
     const container = document.getElementById("Map");
