@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 const { kakao } = window;
 
-const Kakao = ({ searchPlace }) => {
+const Kakao = ({ searchPlace, isMapDetail }) => {
   const [map, setMap] = useState(null);
   useEffect(() => {
     const container = document.getElementById("Map");
@@ -78,7 +78,7 @@ const Kakao = ({ searchPlace }) => {
       id="Map"
       style={{
         width: "100%",
-        height: "500px",
+        height: isMapDetail ? "100%" : "500px",
         zIndex: "0",
       }}
     ></div>
