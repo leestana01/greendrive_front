@@ -137,7 +137,7 @@ function LandingPage() {
     navigate('/');
   }
   const gotoMapDetail = () => {
-    setIsMapDetail(!isMapDetail);
+    setIsMapDetail(true);
   }
 
   const handleSubmit = (e) => {
@@ -145,6 +145,10 @@ function LandingPage() {
     setPlace(InputText);
     setInputText("");
   };
+
+  const handleIsMapDetail = (isMapDetail) => {
+    setIsMapDetail(isMapDetail);
+  }
 
 
   return (
@@ -154,10 +158,8 @@ function LandingPage() {
         paddingRight: isMapDetail ? '0px' : '30px',
         paddingBottom: isMapDetail ? '0px' : '30px',
       }}>
-
-        <div className={isMapDetail ? "fadeOff" : ""}
-          
-        ><Header /></div>
+        <div className={isMapDetail ? "fadeOff" : ""}>
+          <Header /></div>
         <div style={{
           position: isMapDetail ? 'absolute' : 'static',
           zIndex: 1,
@@ -175,7 +177,7 @@ function LandingPage() {
                 />
               </Logo>
             <input
-              placeholder="주소를 입력하세요"
+              placeholder="지역을 입력하세요"
               onChange={onChange}
               value={InputText}
               style={{
@@ -207,7 +209,7 @@ function LandingPage() {
           <Kakao searchPlace={Place} isMapDetail={isMapDetail} />
         </div >
       </BodyWrapper>
-      <Nav />
+      <Nav getIsMapDetail={handleIsMapDetail} />
     </Container>
   );
 }
