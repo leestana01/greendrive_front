@@ -229,6 +229,27 @@ const Login = () => {
     margin: "0 auto",
     marginTop: "30px",
   };
+
+  //kakao oauth 구현 임시 코드
+
+  const code = new URL(window.location.href).searchParams.get("code");
+
+  const SocialKakao = () => {
+    const Rest_api_key = "REST API KEY"; //REST API KEY
+    const redirect_uri = "http://localhost:3000/auth"; //Redirect URI
+    // oauth 요청 URL
+
+    const handleLogin = () => {
+      const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
+      window.location.href = kakaoURL;
+    };
+    return (
+      <>
+        <button onClick={handleLogin}>카카오 로그인</button>
+      </>
+    );
+  };
+
   return (
     <Container>
       <BodyWrapper>
@@ -267,12 +288,12 @@ const Login = () => {
               <Findidment onClick={navigateTofindid}>아이디 찾기</Findidment>
             </FindLinks>
             {divs}
-
             <div>
               <Memberq>아직 회원이 아니신가요?</Memberq>
               <br />
               <Signup onClick={navigateToJoin}>회원가입</Signup>
             </div>
+            {SocialKakao()} {/* 새로 추가된 코드 */}
           </BoxContainer>
         </Body>
       </BodyWrapper>
