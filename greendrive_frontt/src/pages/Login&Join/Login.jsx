@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import KakaoLogin from "react-kakao-login";
 
 const Container = styled.div`
   display: flex;
@@ -9,23 +10,28 @@ const Container = styled.div`
   min-height: 100vh;
   position: relative;
   text-align: center;
-  background-color: #fffff;
-  -ms-overflow-style: none;
+  background-color: #ffffff;
+  overflow: auto; /* 화면 스크롤 기능 유지 */
+  -ms-overflow-style: none; /* IE 및 Edge에서 스크롤 바를 숨김 */
 
   /* 미디어 쿼리 적용 */
   @media (hover: hover) {
     width: 390px;
     margin: 0 auto;
   }
-
   &::-webkit-scrollbar {
-    display: none;
+    display: none; /* 스크롤 바를 숨김 */
   }
 `;
 
 const BodyWrapper = styled.div`
-  flex: 1; /* 남은 공간을 채우도록 설정 */
-  overflow: hidden; /* 스크롤이 있는 경우 내용을 스크롤합니다. */
+  flex: 1;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `;
 
 const HeadBox = styled.div`
@@ -115,11 +121,12 @@ const Findidment = styled.div`
   letter-spacing: -0.333px;
   text-decoration-line: underline;
   cursor: pointer;
+  margin-top: 50px;
 `;
 
 const LoginBox = styled.div`
   margin: auto;
-  margin-top: 8%;
+  margin-top: 3%;
   display: flex;
   width: 328px;
   height: 45px;
@@ -132,11 +139,36 @@ const LoginBox = styled.div`
   background: #519a09;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;
-  margin-bottom: 50px;
+`;
+
+const KakaoLoginBox = styled.div`
+  margin: auto;
+  margin-top: 3%;
+  display: flex;
+  width: 328px;
+  height: 45px;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  border: 1px solid #519a09; /* 테두리에만 색을 적용 */
+  border-radius: 6px;
+  background: #ffdc3c;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
 `;
 
 const LoginText = styled.div`
   color: #fff;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+`;
+
+const KakaoLoginText = styled.div`
+  color: #000;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -177,6 +209,16 @@ const Subtitle = styled.div`
   max-width: 950px; /* 최대 너비를 설정하여 화면 크기가 커져도 너무 넓어지지 않도록 함 */
   padding: 0 20px; /* 좌우 여백을 추가하여 너비 조정 */
 `;
+
+const Kakaoimg = styled.div`
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+  border-radius: 15px;
+  background: url(<path-to-image>), lightgray 50% / cover no-repeat;
+
+  display: flex;
+`;
 const Login = () => {
   const navigate = useNavigate();
 
@@ -191,6 +233,14 @@ const Login = () => {
 
   const [divs, setDivs] = useState([]);
   const [failDivAdded, setFailDivAdded] = useState(false);
+
+  const handleKakaoLogin = () => {
+    const Rest_api_key = "REST API KEY"; // REST API KEY
+    const redirect_uri = "http://localhost:3000/auth"; // Redirect URI
+
+    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
+    window.location.href = kakaoURL;
+  };
 
   const BACKEND_URL = "" || "";
   const onClick = async () => {
@@ -239,13 +289,9 @@ const Login = () => {
     const redirect_uri = "http://localhost:3000/auth"; //Redirect URI
     // oauth 요청 URL
 
-    const handleLogin = () => {
-      const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
-      window.location.href = kakaoURL;
-    };
     return (
       <>
-        <button onClick={handleLogin}>카카오 로그인</button>
+        <button onClick={handleKakaoLogin}>카카오 로그인</button>
       </>
     );
   };
@@ -281,6 +327,15 @@ const Login = () => {
                 onChange={(e) => setLoginPw(e.target.value)}
               />
             </InputBox>
+            <KakaoLoginBox onClick={handleKakaoLogin}>
+              <Kakaoimg>
+                <img
+                  src={`${process.env.PUBLIC_URL}/images/kakao.png`}
+                  alt="kakaologo"
+                />
+              </Kakaoimg>
+              <KakaoLoginText>카카오톡으로 로그인하기</KakaoLoginText>
+            </KakaoLoginBox>
             <LoginBox onClick={onClick}>
               <LoginText>로그인</LoginText>
             </LoginBox>
@@ -293,7 +348,6 @@ const Login = () => {
               <br />
               <Signup onClick={navigateToJoin}>회원가입</Signup>
             </div>
-            {SocialKakao()} {/* 새로 추가된 코드 */}
           </BoxContainer>
         </Body>
       </BodyWrapper>
