@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import Nav from "../../components/Nav";
 
 const Container = styled.div`
   display: flex;
@@ -11,6 +12,7 @@ const Container = styled.div`
   text-align: center;
   background-color: #ffffff;
   -ms-overflow-style: none;
+
   /* 미디어 쿼리 적용 */
   @media (hover: hover) {
     width: 390px;
@@ -87,23 +89,8 @@ const InputBox = styled.div`
   display: flex;
 
   margin: 0 auto;
-  width: 335px;
+  width: 320px;
   height: 45px;
-  padding: 5px;
-  align-items: center;
-
-  flex-shrink: 0;
-  border-radius: 6px;
-  border: 1px solid #60716f;
-  background: #fff;
-`;
-
-const InputBox2 = styled.div`
-  display: flex;
-
-  margin: 0 auto;
-  width: 335px;
-  height: 180px;
   padding: 5px;
   align-items: center;
 
@@ -145,10 +132,12 @@ const GreenBox = styled.div`
   padding: 10px;
   justify-content: center;
   align-items: center;
+  border-radius: 30px;
+  background: #519a09;
 
   flex-shrink: 0;
   border-radius: 6px;
-  background: #519a09;
+
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;
 `;
@@ -193,7 +182,7 @@ const Cmtextemph = styled.div`
 const Cmtext = styled.div`
   display: flex;
   color: #000;
-  font-size: 24px;
+  font-size: 20px;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -201,11 +190,11 @@ const Cmtext = styled.div`
 `;
 const BtmBox = styled.div`
   margin: 0 auto;
-  margin-top: 6%;
+  margin-top: 15%;
 
   display: flex;
   width: 145px;
-  height: 53px;
+  height: 40px;
   padding: 10px;
   justify-content: center;
   align-items: center;
@@ -234,11 +223,12 @@ const ModalView = styled.div.attrs((props) => ({
   flex-direction: column;
   border-radius: 20px;
   width: 90%;
-  padding-top: 7%;
+  padding-top: 5%;
   padding-bottom: 30px;
   background-color: #ffffff;
   overflow-y: auto; /* 스크롤을 추가 */
   width: 300px;
+  z-index: 2; //뒷 화면 위쪽에 위치해서 뒷 화면 어둡게 만들기 위해 추가함 (11/06)
 `;
 
 const Subtitle = styled.div`
@@ -255,13 +245,93 @@ const Subtitle = styled.div`
   max-width: 950px; /* 최대 너비를 설정하여 화면 크기가 커져도 너무 넓어지지 않도록 함 */
   padding: 0 20px; /* 좌우 여백을 추가하여 너비 조정 */
 `;
+
+const DrivingLicenseUpload = styled.input`
+  /* Add your custom styles for the input element */
+  margin: 0 auto;
+  position: relative;
+  align-items: center;
+  width: 175px;
+  height: 32px;
+  background: #ffffff;
+  border-radius: 6px;
+  border: none;
+  margin: auto;
+  margin-top: 10px;
+  font-size: 13px;
+
+  &:focus {
+    border: none;
+    outline: none;
+  }
+`;
+
+const RegistrationCardUpload = styled.input`
+  /* Add your custom styles for the input element */
+  margin: 0 auto;
+  position: relative;
+  align-items: center;
+  width: 175px;
+  height: 32px;
+  background: #ffffff;
+  border-radius: 6px;
+  border: none;
+  margin: auto;
+  margin-top: 10px;
+  font-size: 13px;
+  &:focus {
+    border: none;
+    outline: none;
+  }
+`;
+
+const InputBox2 = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  width: 335px;
+  height: 180px;
+  padding: 5px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  border: 1px solid #60716f;
+  background: #fff;
+`;
+
+const PreviewImage = styled.img`
+  width: 100%; /* 이미지의 너비를 100%로 설정하여 부모 요소의 너비에 맞춤 */
+  height: 100%; /* 이미지의 높이를 100%로 설정하여 부모 요소의 높이에 맞춤 */
+  object-fit: contain; /* 이미지가 잘리지 않고 가로와 세로 비율을 유지하면서 부모 요소에 맞게 조정됨 */
+  border-radius: 6px; /* 이미지 주변을 둥글게 처리 */
+`;
+
 const Carregist = () => {
   const navigate = useNavigate();
 
-  const navigateToLogin = () => {
-    navigate("/Login");
+  const navigateToMain = () => {
+    navigate("/Main");
   };
+  const [name, setName] = useState("");
+  const [drivingLicense, setDrivingLicense] = useState("");
+  const [registrationLicense, setRegistrationLicense] = useState("");
+  const [registrationLicensePreview, setRegistrationLicensePreview] =
+    useState("");
+  const [drivingLicensePreview, setDrivingLicensePreview] = useState("");
+
   const [isOpen1, setIsOpen1] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isInputFilled, setIsInputFilled] = useState(false);
+  //등록하기 버튼 활성화 검사
+  useEffect(() => {
+    if (name && drivingLicense && registrationLicense) {
+      setIsInputFilled(true);
+    } else {
+      setIsInputFilled(false);
+    }
+  }, [name, drivingLicense, registrationLicense]);
+
   //스크롤 방지
   useEffect(() => {
     if (isOpen1) {
@@ -285,13 +355,11 @@ const Carregist = () => {
     };
   }, [isOpen1]);
 
+  // 모달 창을 열거나 닫기 위한 메소드
   const openModalHandler = () => {
-    // isOpen의 상태를 변경하는 메소드를 구현
-    // !false -> !true -> !false
-    setIsOpen1(!isOpen1);
+    setIsModalOpen(!isModalOpen);
   };
 
-  const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -301,25 +369,44 @@ const Carregist = () => {
 
   const BACKEND_URL = "" || "";
 
+  const handleModal = () => {
+    setIsOpen1(true);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("handleSubmit called");
 
-    const requestData = {
-      name: name,
-      phone: phone,
-    };
+    const drivingLicenseFile =
+      document.getElementById("drivingLicense")?.files[0];
+    const registrationCardFile = document.getElementById("registrationLicense")
+      ?.files[0];
+
+    if (!drivingLicenseFile || !registrationCardFile) {
+      console.error("Please upload both files.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("drivingLicense", drivingLicenseFile);
+    formData.append("registrationCard", registrationCardFile);
 
     try {
       const response = await axios.post(
-        `${BACKEND_URL}/forgot-email/`,
-        requestData
+        `${BACKEND_URL}/register-car/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
-      console.log("이메일(아이디) 찾음");
-      setEmail(response.data.email);
-      openModalHandler();
+
+      console.log("Registration successful:", response.data);
+      // Add any necessary logic here for a successful registration
     } catch (error) {
-      console.error("실패:", error);
+      console.error("Registration failed:", error);
       if (
         error.response &&
         error.response.data &&
@@ -333,8 +420,7 @@ const Carregist = () => {
       if (!failDivAdded) {
         const newFailDiv = (
           <div key={divs.length} className="failDiv" style={failStyle}>
-            아이디 찾기에 실패했습니다. <br />
-            이름과 휴대폰 번호를 다시 한 번 확인해주세요.
+            등록에 실패했습니다. 다시 시도해주세요.
           </div>
         );
         setDivs([...divs, newFailDiv]);
@@ -387,31 +473,80 @@ const Carregist = () => {
           </InputBox>
           <Subtitle>운전면허증</Subtitle>
           <InputBox2>
-            <Input
-              type="text"
-              placeholder="운전면허를 스캔 후 첨부해주세요"
-              id="phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
+            {drivingLicensePreview ? (
+              <PreviewImage
+                src={drivingLicensePreview}
+                alt="운전면허증 미리보기"
+              />
+            ) : (
+              <label htmlFor="drivingLicense" className="custom-file-upload">
+                <span>운전면허 등증을 스캔 후 첨부해주세요.</span>
+                <br />
+                <DrivingLicenseUpload
+                  type="file"
+                  id="drivingLicense"
+                  accept="image/*"
+                  value={drivingLicense}
+                  onChange={(e) => {
+                    setDrivingLicense(e.target.value);
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      setDrivingLicensePreview(reader.result);
+                    };
+                    if (file) {
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                />
+              </label>
+            )}
           </InputBox2>
 
           <Subtitle>자동차 등록증</Subtitle>
           <InputBox2>
-            <Input
-              type="text"
-              placeholder="자동차 등록증을 스캔 후 첨부해주세요"
-              id="phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
+            {registrationLicensePreview ? (
+              <PreviewImage
+                src={registrationLicensePreview}
+                alt="자동차 등록증 미리보기"
+              />
+            ) : (
+              <label
+                htmlFor="registrationLicense"
+                className="custom-file-upload"
+              >
+                <span>자동차 등록증을 스캔 후 첨부해주세요.</span>
+                <br />
+                <RegistrationCardUpload
+                  type="file"
+                  id="registrationLicense"
+                  accept="image/*"
+                  value={registrationLicense}
+                  onChange={(e) => {
+                    setRegistrationLicense(e.target.value);
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      setRegistrationLicensePreview(reader.result);
+                    };
+                    if (file) {
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                />
+              </label>
+            )}
           </InputBox2>
           {divs}
 
           <GreenBox
             onClick={(e) => {
-              handleSubmit(e);
+              if (isInputFilled) {
+                handleSubmit(e);
+                handleModal();
+              }
             }}
+            style={{ backgroundColor: isInputFilled ? "#519a09" : "#a0a0a0" }}
           >
             <FindText>등록하기</FindText>
           </GreenBox>
@@ -421,24 +556,33 @@ const Carregist = () => {
                 <CmtxtBox>
                   <Cmtext>
                     <Cmtextemph>{name}</Cmtextemph>
-                    님의 아이디는
+                    님의 자동차가
+                    <br />
                   </Cmtext>
+                  <Cmtext>정상적으로 등록되었습니다!</Cmtext>
                 </CmtxtBox>
 
-                <CmtxtBox>
-                  <Cmtext>
-                    <Cmtextemph> {email && <div>{email}</div>}</Cmtextemph>
-                    <Plus>입니다.</Plus>
-                  </Cmtext>
-                </CmtxtBox>
                 <BtmBox>
-                  <Btmtext onClick={navigateToLogin}>로그인 하러가기</Btmtext>
+                  <Btmtext onClick={navigateToMain}>홈으로 이동</Btmtext>
                 </BtmBox>
               </ModalView>
             </ModalBackdrop1>
           ) : null}
         </Body>
       </BodyWrapper>
+      <style>
+        {`
+          .custom-file-upload {
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+            margin: 0 padding;
+            align-items: center;
+            width: 280px;
+          }
+        `}
+      </style>
+      <Nav />
     </Container>
   );
 };
