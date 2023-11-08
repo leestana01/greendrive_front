@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { FaSearch, FaRegBookmark } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Kakao from "../Kakao";
+// import Kakao from "../Kakao";
+import Kakao from "../Kakao_test";
 import Nav from "./Nav";
 import Header from "./Header";
 
@@ -103,7 +104,7 @@ const Logo = styled.div`
 `;
 
 const BACKEND_URL = axios.create({
-    baseURL: "http://localhost:4000/records" //백엔드 서버 주소
+    baseURL: "http://api.greendrive.kro.kr/spaces", //백엔드 서버 주소
 });
   
 // function
@@ -111,21 +112,25 @@ function LandingPage() {
   const [InputText, setInputText] = useState("");
   const [Place, setPlace] = useState("");
   const [bookmarkList, setBookmarkList] = useState([]);
+  const [dataType, setDataType] = useState(0);
+  const [mark, setMark] = useState([]);
   const [isMapDetail, setIsMapDetail] = useState(false);
 
   //데이터 불러오기
-  const initBookmark = async () => {
+  const initBookmark = async (data) => {
     try {
-      const response = await BACKEND_URL.get("");
+      const response = await BACKEND_URL.get(`${data}`);
       const items = response.data;
-      setBookmarkList(items.slice(0, 2));
+      setMark(items);
+      // console.log(items);
+      // setBookmarkList(items.slice(0, 2));
     } catch (error) {
       console.error("Error:", error.message);
     }
   };
 
   useEffect(() => {
-    initBookmark();
+    initBookmark("");
   }, []);
 
   const onChange = (e) => {
@@ -142,7 +147,17 @@ function LandingPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setPlace(InputText);
+    if (InputText.includes('공영')) {
+      initBookmark("/search?keyword=공영");
+      setDataType(0);
+    }
+    else if (InputText.includes('민영')) {
+      initBookmark("/search?keyword=민영");
+      setDataType(1);
+    }
+    else {
+      setPlace(InputText);
+    }
     setInputText("");
   };
 
@@ -195,8 +210,8 @@ function LandingPage() {
             {bookmarkList.map((item, index) => (
               <BookmarkElements onClick={gotoBookmarkDetails} key={index} >
                 <FaRegBookmark size="15" color="green" />
-                <h5>{item.주차장명}</h5>
-                <p>{item.소재지도로명주소}</p>
+                <h5>{item.parkName}</h5>
+                <p>{item.address}</p>
               </BookmarkElements>
             ))}
         </Bookmark>
@@ -206,7 +221,11 @@ function LandingPage() {
             overflow: "hidden",
             height: isMapDetail? "90vh": "auto"
           }}>
-          <Kakao searchPlace={Place} isMapDetail={isMapDetail} />
+          <Kakao searchPlace={Place}
+            isMapDetail={isMapDetail}
+            Mark={mark}
+            dataType={dataType}
+          />
         </div >
       </BodyWrapper>
       <Nav getIsMapDetail={handleIsMapDetail} />
