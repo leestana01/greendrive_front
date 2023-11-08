@@ -48,7 +48,7 @@ const Logoimg = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 135%; /* 40.5px */
-  margin-top: 260px;
+  margin-top: 200px;
 `;
 const BoxContainer = styled.div`
   display: flex;
