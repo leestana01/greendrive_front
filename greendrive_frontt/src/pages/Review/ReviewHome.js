@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ReviewStateContext } from "../../App";
 import styled from "styled-components";
+import axios from 'axios';
 
 import MyHeader from "../../components/Header";
 import HeaderMenu from "../../components/HeaderMenu";
@@ -53,7 +54,26 @@ const Home = (props) => {
   }, []);
 
   useEffect(() => {
-    // 여기에 useEffect 코드를 작성하세요
+    // Create FormData
+    const formData = new FormData();
+    formData.append("userId", "testuser1");
+    formData.append("reviewImage", new File([""], "/C:/Users/User/Desktop/download.jpg")); 
+    formData.append("content", "주차장이 귀여워요!");
+
+    // Make POST request
+    axios.post("서버URL", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        }
+    })
+      .then(response => {
+        // Handle the response if needed
+        console.log(response.data);
+      })
+      .catch(error => {
+        // Handle the error if needed
+        console.error(error);
+      });
   }, [reviewList]);
 
   const TitleLineA = styled.div`
