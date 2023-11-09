@@ -112,7 +112,7 @@ function LandingPage() {
   const [InputText, setInputText] = useState("");
   const [Place, setPlace] = useState("");
   const [bookmarkList, setBookmarkList] = useState([]);
-  const [dataType, setDataType] = useState(0);
+  const [dataType, setDataType] = useState(null);
   const [mark, setMark] = useState([]);
   const [isMapDetail, setIsMapDetail] = useState(false);
 
@@ -156,6 +156,8 @@ function LandingPage() {
       setDataType(1);
     }
     else {
+      initBookmark("");
+      setDataType(null);
       setPlace(InputText);
     }
     setInputText("");

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 const { kakao } = window;
 
@@ -12,16 +13,15 @@ const Kakao = ({ searchPlace, isMapDetail, Mark, dataType }) => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [mark, setMark] = useState([]);
   const [pos, setPos] = useState([]);
+  const [markers, setMarkers] = useState([]);
   // InfoWindow를 저장할 상태
-  const [openInfoWindow, setOpenInfoWindow] = useState(null);
-  const [details, setDetails] = useState(null);
+  let openInfo = null;
 
   //주차장 id로 상세정보 검색
   const searchParking = async (data) => {
     try {
       const response = await BACKEND_URL.get(`${data}`);
       const items = response.data;
-      setDetails(items);
       return items;
     } catch (error) {
       console.error("Error:", error.message);
@@ -34,19 +34,19 @@ const Kakao = ({ searchPlace, isMapDetail, Mark, dataType }) => {
     const getData = () => {
       details.then((data) => {
         console.log(data);
+
         const infowindow = new kakao.maps.InfoWindow({
           content: data.parkName,
         });
-        //클릭될 경우 모든 인포윈도우 닫음
-        infowindow.close();
+        if (openInfo !== null) openInfo.close();
+        console.log(openInfo);
 
         // title을 표시할 InfoWindow 생성
-
         infowindow.setContent(
-          '<div style="padding:5px;  word-break: keep-all; min-height: 35px;">' +
-            '<p style="margin: 5px; font-weight: bold; font-size:14px;">' +
+          '<div style="padding:5px; word-break: keep-all; min-height: 45px;">' +
+            '<p style="margin: 3px; font-weight: bold; font-size:14px;">' +
             data.parkName +
-            '</p> <p style="margin: 5px; font-size:11px;">' +
+            '</p> <p style="margin: 5px; padding-bottom: 5px; font-size:11px;">' +
             data.address +
             "</p>" +
             "</div>"
@@ -56,7 +56,7 @@ const Kakao = ({ searchPlace, isMapDetail, Mark, dataType }) => {
         infowindow.open(map, marker);
 
         // 열린 InfoWindow 상태 업데이트
-        setOpenInfoWindow(infowindow);
+        openInfo = infowindow;
       });
     };
     getData();
@@ -79,29 +79,34 @@ const Kakao = ({ searchPlace, isMapDetail, Mark, dataType }) => {
 
         const options = {
           center: currentLocation,
-          level: 3,
+          level: 8,
         };
 
-        const map = new kakao.maps.Map(container, options);
-        setMap(map); // map 상태 업데이트
+        const newMap = new kakao.maps.Map(container, options);
+        setMap(newMap); // map 상태 업데이트
       });
     } else {
       console.log("Geolocation을 지원하지 않는 브라우저입니다.");
     }
   }, []);
 
+  // Mark 상태가 변경될 때(데이터 요청 주소가 변경될 때) 실행
   useEffect(() => {
-    // 컴포넌트가 마운트될 때 또는 Mark 상태가 변경될 때 실행
+    //모든 마커 삭제
+    if (markers[0] !== null)
+      for (let i = 0; i < markers.length; i++) markers[i].setMap(null);
     for (let i = 0; i < Mark.length; i++) {
       const markLocation = new kakao.maps.LatLng(
         Mark[i].latitude,
         Mark[i].longitude
       );
+
       setPos((prevPos) => [
         ...prevPos,
         {
           id: Mark[i].id,
           latlng: markLocation,
+          type: Mark[i].type,
         },
       ]);
     }
@@ -112,26 +117,41 @@ const Kakao = ({ searchPlace, isMapDetail, Mark, dataType }) => {
     //즐겨찾기 마커 이미지
     // var imageSrc =
     //   "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+    var imageSrc =
+      dataType === 0
+        ? `${process.env.PUBLIC_URL}/images/marker_blue.png`
+        : dataType === 1
+        ? `${process.env.PUBLIC_URL}/images/marker_red.png`
+        : dataType === null
+        ? "https://t1.daumcdn.net/mapjsapi/images/2x/marker.png"
+        : "";
     for (let i = 0; i < pos.length; i++) {
-      //이미지 객체 생성
-      // const imageSize = new kakao.maps.Size(24, 35);
-      //즐겨찾기 마커 이미지 객체 생성
-      // const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-      const marker = new kakao.maps.Marker({
-        map: map,
-        position: pos[i].latlng,
-        title: pos[i].id,
-        //마커 이미지를 즐겨찾기 마커 객체로 설정
-        // image: markerImage,
-      });
-      // 마커를 클릭할 때 이벤트 핸들러 등록
-      kakao.maps.event.addListener(marker, "click", () => {
-        handleMarkerClick(marker, pos[i].id);
-      });
+      if (pos[i].type === dataType || dataType === null) {
+        //이미지 객체 생성
+        const imageSize = new kakao.maps.Size(24, 35);
+        //마커 이미지 객체 생성
+        const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+        const marker = new kakao.maps.Marker({
+          map: map,
+          position: pos[i].latlng,
+          title: pos[i].id,
+          //마커 이미지를 즐겨찾기 마커 객체로 설정
+          image: markerImage,
+        });
+        setMarkers((prevMarkers) => [...prevMarkers, marker]);
+
+        // 마커를 클릭할 때 이벤트 핸들러 등록
+        kakao.maps.event.addListener(marker, "click", () => {
+          handleMarkerClick(marker, pos[i].id);
+        });
+      }
     }
   }, [pos, map]);
 
   useEffect(() => {
+    //인포윈도우 닫기
+    if (openInfo !== null) openInfo.close();
+
     // 위치 검색 객체 생성
     const ps = new kakao.maps.services.Places();
 
