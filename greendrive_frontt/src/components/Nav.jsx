@@ -82,7 +82,7 @@ const NavLink = styled.div`
   }
 `;
 
-const NavBar = () => {
+const NavBar = ({ getIsMapDetail }) => {
   const [isBarcodeOpen, setBarcodeOpen] = useState(false);
   const barcodeCanvasRef = useRef(null);
   const [barcodeText, setBarcodeText] = useState("");
@@ -90,7 +90,7 @@ const NavBar = () => {
   useEffect(() => {
     // 로컬 스토리지에서 username을 읽음 -> 바코드로 출력할 예정
     const storedUsername = localStorage.getItem("username") || "NOUSER";
-    setBarcodeText(storedUsername);
+    setBarcodeText();
   }, []);
 
   useEffect(() => {
@@ -113,6 +113,10 @@ const NavBar = () => {
     }
   }, [barcodeText]);
 
+  const setIsMapDetail = () => {
+    getIsMapDetail(false);
+  };
+
   return (
     <NavigationBar>
       <BarcodeContainer isOpen={isBarcodeOpen}>
@@ -126,7 +130,7 @@ const NavBar = () => {
 
       <BarcodeIcon size="60" onClick={() => setBarcodeOpen(!isBarcodeOpen)} />
       <NavItems>
-        <NavLink>
+        <NavLink onClick={setIsMapDetail}>
           <FaHome size="40" color="green" />홈
         </NavLink>
         <NavLink>
