@@ -304,7 +304,7 @@ const Join = () => {
   const [password, setPassword] = useState("");
   const [password_check, setPassword_check] = useState("");
   const [name, setName] = useState("");
-  const [nickname, setNickName] = useState("");
+  //const [nickname, setNickName] = useState("");
   const [car, setCar] = useState("");
   const [phone, setPhone] = useState("");
 
@@ -314,6 +314,7 @@ const Join = () => {
   const [failDivAdded, setFailDivAdded] = useState(false);
   const [errorText, setErrorText] = useState("");
   const [phoneFirst, setPhoneFirst] = useState("010");
+  const [phoneNumberAPIResponse, setPhoneNumberAPIResponse] = useState("");
 
   const [emailError, setEmailError] = useState(false); // 이메일 형식 에러 상태
   const [emailErrorMessage, setEmailErrorMessage] = useState(""); // 이메일 에러 메시지
@@ -346,23 +347,38 @@ const Join = () => {
   const onClick = async () => {
     // 사용자 입력 데이터를 서버로 전송하는 로직을 추가합니다.
     const userData = {
-      email: email,
-      password: password,
-      password_check: password_check,
-      phone: phone,
       name: name,
-      nickname: nickname,
-      car: car,
+      userId: email,
+      password: password,
+      carType: car,
+      phoneNo: phone,
     };
 
-    const BACKEND_URL = "" || "";
+    const BACKEND_URL = `백엔드 URL`;
     try {
-      const response = await axios.post(`${BACKEND_URL}/login/`, userData);
+      const response = await axios.post(`${BACKEND_URL}/signup`, userData);
       console.log("회원가입 성공:", response.data);
       navigate("/Login");
     } catch (error) {
       console.log("회원가입 실패:");
       errorHandler(error);
+    }
+  };
+
+  const savePhoneNumberToAPI = async () => {
+    const phoneNumberData = {
+      phoneNo: phoneFirst + phone,
+    };
+
+    const PHONE_NUMBER_API_URL = "API_ENDPOINT_URL"; // 실제 API 엔드포인트로 대체
+
+    try {
+      const response = await axios.post(PHONE_NUMBER_API_URL, phoneNumberData);
+      console.log("휴대폰 번호가 성공적으로 저장되었습니다:", response.data);
+      setPhoneNumberAPIResponse("휴대폰 번호가 성공적으로 저장되었습니다!");
+    } catch (error) {
+      console.error("휴대폰 번호 저장 실패:", error);
+      setPhoneNumberAPIResponse("휴대폰 번호 저장에 실패했습니다.");
     }
   };
   const errorHandler = (error) => {
@@ -371,42 +387,37 @@ const Join = () => {
         console.log("에러 응답:", error.response.data);
         let errorMessage = "";
         if (
-          error.response.data.email == "This field may not be blank." ||
-          error.response.data.name == "This field may not be blank." ||
-          error.response.data.password == "This field may not be blank." ||
-          error.response.data.passwordCheck == "This field may not be blank." ||
-          error.response.data.phone == "This field may not be blank." ||
-          error.response.data.nickname == "This field may not be blank." ||
-          error.response.data.car == "This field may not be blank."
+          error.response.data.email === "이미 등록된 이메일입니다." ||
+          error.response.data.phone === "이미 등록된 휴대폰 번호입니다."
         ) {
-          setErrorText("입력을 확인하세요.");
-        } else if (
-          error.response.data.email == "user with this email already exists." ||
-          error.response.data.phone == "user with this phone already exists."
-        ) {
-          setErrorText("이미 가입된 회원입니다.");
+          errorMessage = "이미 가입된 회원입니다.";
+        } else {
+          errorMessage = "입력을 확인하세요.";
         }
+        setErrorText(errorMessage);
       }
     } else {
       console.error("네트워크 에러:", error.message);
       // 네트워크 관련 에러 메시지를 콘솔에 출력합니다.
     }
   };
+
   const failStyle = {
     color: "red",
     textAlign: "left",
     margin: "0 auto",
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (password === confirmPassword) {
       // 비밀번호 일치, 회원가입 로직 실행
       console.log("회원가입 성공");
+      await savePhoneNumberToAPI(); // 네비게이션 전에 API에 휴대폰 번호 저장
       navigateToSignupcard();
     } else {
       // 비밀번호 불일치
-      console.log("비밀번호가 일치하지 않습니다.");
+      console.log("비밀번호가 일치하지 않습z니다.");
     }
   };
 
@@ -434,7 +445,7 @@ const Join = () => {
       password &&
       password_check &&
       name &&
-      nickname &&
+      //nickname &&
       car &&
       phone &&
       isChecked
@@ -448,7 +459,7 @@ const Join = () => {
   // useEffect를 사용하여 모든 입력 상태가 변경될 때마다 checkAllFieldsFilled 함수를 실행합니다.
   useEffect(() => {
     checkAllFieldsFilled();
-  }, [email, password, password_check, name, nickname, car, phone, isChecked]);
+  }, [email, password, password_check, name, car, phone, isChecked]); //nickname
 
   const url1 =
     "https://harvest-machine-d20.notion.site/77980ca8efd3435e9915e88b830a5ca4";
@@ -476,7 +487,7 @@ const Join = () => {
               onChange={(e) => setName(e.target.value)}
             />
           </InputBox>
-          <Subtitle>이메일</Subtitle>
+          <Subtitle>이메일 (ID)</Subtitle>
           <InputBox>
             <Input
               type="text"
@@ -491,6 +502,7 @@ const Join = () => {
               {emailErrorMessage}
             </div>
           )}
+          {/*
           <Subtitle>닉네임</Subtitle>
 
           <InputBox>
@@ -500,6 +512,7 @@ const Join = () => {
               onChange={(e) => setNickName(e.target.value)}
             />
           </InputBox>
+          */}
           <Subtitle>비밀번호</Subtitle>
           <InputBox>
             <Input
