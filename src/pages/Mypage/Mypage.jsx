@@ -95,7 +95,7 @@ const Profileicon = styled.div`
 const Cameraicon = styled.div`
   position: absolute;
   top: 135px;
-  left: 95px;
+  margin-left: 105px;
   width: 19px;
   height: 19px;
   flex-shrink: 0;
@@ -214,6 +214,12 @@ const Bookmarkicon = styled.div`
   }
 `;
 
+const ProfileImage = styled.img`
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+`;
+
 // Separator 컴포넌트를 아이콘 상자 안에 위치시킵니다.
 const Separator1 = styled.div`
   position: absolute;
@@ -255,7 +261,7 @@ const Mypage = () => {
   const [registrationLicensePreview, setRegistrationLicensePreview] =
     useState("");
   const [drivingLicensePreview, setDrivingLicensePreview] = useState("");
-
+  const [userId, setUserId] = useState("");
   const [isOpen1, setIsOpen1] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInputFilled, setIsInputFilled] = useState(false);
@@ -273,6 +279,15 @@ const Mypage = () => {
   const handleLicenseBoxClick = () => {
     navigate("/Carregist");
   };
+
+  useEffect(() => {
+    // 로컬스토리지에서 userId 가져오기
+    const storedUserId = localStorage.getItem("user_id");
+    if (storedUserId) {
+      setUserId(storedUserId);
+    }
+  }, []);
+
   //스크롤 방지
   useEffect(() => {
     if (isOpen1) {
@@ -309,7 +324,24 @@ const Mypage = () => {
   const [failDivAdded, setFailDivAdded] = useState(false);
 
   const BACKEND_URL = "" || "";
+  const [selectedImage, setSelectedImage] = useState(null);
 
+  const handleCameraIconClick = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+      };
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
+  };
   const handleModal = () => {
     setIsOpen1(true);
   };
@@ -399,12 +431,16 @@ const Mypage = () => {
               </Settingicon>
             </Topbar>
             <Profileicon>
-              <img
-                src={`${process.env.PUBLIC_URL}/images/profileicon.png`}
-                alt="profile"
-              />
+              {selectedImage ? (
+                <ProfileImage src={selectedImage} alt="selected" />
+              ) : (
+                <img
+                  src={`${process.env.PUBLIC_URL}/images/profileicon.png`}
+                  alt="profile"
+                />
+              )}
             </Profileicon>
-            <Cameraicon>
+            <Cameraicon onClick={handleCameraIconClick}>
               <img
                 src={`${process.env.PUBLIC_URL}/images/camera_mypage.png`}
                 alt="cameraicon"
@@ -420,7 +456,7 @@ const Mypage = () => {
               <Licensetext>친환경 자동차 등록하기</Licensetext>
             </Licensebox>
             <Namebox>
-              <Username>{name}</Username>
+              <Username>{localStorage.Name}</Username>
               <Usertext>드라이버님</Usertext>
             </Namebox>
             <Infotext>

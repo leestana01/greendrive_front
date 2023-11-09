@@ -239,7 +239,7 @@ const Login = () => {
   const [failDivAdded, setFailDivAdded] = useState(false);
 
   const handleKakaoLogin = () => {
-    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API}&redirect_uri=${KAKAO_URI}&response_type=code`;
+    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API}&redirect_uri=${CLIENT}${KAKAO_URI}&response_type=code`;
     window.location.href = kakaoURL;
   };
 
@@ -254,10 +254,14 @@ const Login = () => {
       const response = await axios.post(`${BACKEND_URL}/login/`, userData);
       console.log("로그인성공:", response.data);
       if (response.data.key) {
-        localStorage.setItem("access_token", response.data.key);
-        console.log("저장 성공");
+        // 카카오톡으로부터 받은 userId 정보를 localStorage에 저장
+        const { userId } = response.data;
+        if (userId) {
+          localStorage.setItem("user_id", userId);
+        }
+        // 마이페이지로 이동
+        navigate("/Mypage");
       }
-      navigate("/Signup2");
     } catch (error) {
       console.error("로그인 실패:", error);
 
