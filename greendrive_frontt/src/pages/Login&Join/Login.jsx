@@ -234,7 +234,6 @@ const Login = () => {
   const [divs, setDivs] = useState([]);
   const [failDivAdded, setFailDivAdded] = useState(false);
 
-
   const handleKakaoLogin = () => {
     const Rest_api_key = "키 값"; // REST API KEY
     const redirect_uri = "http://localhost:3000/login/oauth2/callback/kakao"; // Redirect URI
@@ -251,7 +250,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(`${BACKEND_URL}/login/`, userData);
-      console.log("로그인 성공:", response.data);
+      console.log("로그인성공:", response.data);
       if (response.data.key) {
         localStorage.setItem("access_token", response.data.key);
         console.log("저장 성공");
