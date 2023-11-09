@@ -1,3 +1,4 @@
+
 import React, { useReducer, useEffect, useRef } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Firstpage from './pages/Login&Join/Firstpage';
@@ -45,6 +46,14 @@ const reducer = (state, action) => {
 export const ReviewStateContext = React.createContext();
 export const ReviewDispatchContext = React.createContext();
 
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Firstpage from "./pages/Login&Join/Firstpage";
+import Join from "./pages/Login&Join/Join";
+import Login from "./pages/Login&Join/Login";
+import Findid from "./pages/Login&Join/Findid";
+import Carregist from "./pages/Login&Join/Carregist";
+import KakaoCode from "./pages/Login&Join/KakaoCode"
+import Mypage from "./pages/Mypage/Mypage";
 
 function App() {
   const [data, dispatch] = useReducer(reducer, []);
@@ -116,8 +125,8 @@ function App() {
           <Route path="/New" element={<ReviewNew />} />
           <Route path="/edit/:id" element={<ReviewEdit />} />
           <Route path="/review/:id" element={<ReviewReview />} />
+          <Route path="/Mypage" element={<Mypage />} />
 
-          
         </Routes>
       </div>
     </BrowserRouter>
