@@ -177,60 +177,6 @@ const Kakao = ({ searchPlace, isMapDetail, Mark, dataType }) => {
     }
   }, [searchPlace]);
 
-  // //검색창에 검색 시 실행되는 useEffect
-  // useEffect(() => {
-  //   var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
-  //   const container = document.getElementById("Map");
-  //   const options = {
-  //     center: new kakao.maps.LatLng(37.4020923, 127.100207),
-  //     level: 3,
-  //   };
-  //   //지도 객체 생성
-  //   const map = new kakao.maps.Map(container, options);
-
-  //   //위치 검색 객체 생성
-  //   const ps = new kakao.maps.services.Places();
-  //   //키워드로 위치 찾기
-  //   ps.keywordSearch(searchPlace + "전기차", placesSearchCB, {
-  //     radius: 500,
-  //   });
-
-  //   function placesSearchCB(data, status, pagination) {
-  //     if (status === kakao.maps.services.Status.OK) {
-  //       //LatLngBounds(): 좌표계에서 사각영역 정보를 표현하는 객체를 생성
-  //       // 인자를 주지 않으면 빈 영역을 생성한다.
-  //       let bounds = new kakao.maps.LatLngBounds();
-  //       for (let i = 0; i < data.length; i++) {
-  //         displayMarker(data[i]);
-  //         //extend(): 인수로 주어진 좌표를 포함하도록 영역 정보 확장
-  //         bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
-  //       }
-  //       //setBounds: 사각형 영역 지정
-  //       map.setBounds(bounds);
-  //     }
-  //   }
-
-  //   //마커 생성 및 마커 클릭시 정보 출력
-  //   function displayMarker(place) {
-  //     //마커 생성
-  //     let marker = new kakao.maps.Marker({
-  //       map: map,
-  //       //place의 y,x값을 받아와서 표시
-  //       position: new kakao.maps.LatLng(place.y, place.x),
-  //     });
-  //     // 마커에 클릭이벤트를 등록합니다
-  //     kakao.maps.event.addListener(marker, "click", function () {
-  //       // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
-  //       infowindow.setContent(
-  //         '<div style="padding:5px; font-size:12px; word-break: keep-all; min-height: 35px;">' +
-  //           place.place_name +
-  //           "</div>"
-  //       );
-  //       infowindow.open(map, marker);
-  //     });
-  //   }
-  // }, [searchPlace]);
-
   return (
     <div
       id="Map"

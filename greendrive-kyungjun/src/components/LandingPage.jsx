@@ -7,6 +7,7 @@ import axios from 'axios';
 import Kakao from "../Kakao_test";
 import Nav from "./Nav";
 import Header from "./Header";
+import Bookmark from "./Bookmark";
 
 //css
 const Container = styled.div`
@@ -65,7 +66,7 @@ const InputForm = styled.form`
     right: 30px;
   }
 `;
-const Bookmark = styled.div`
+const BookmarkStyled = styled.div`
   margin: 20px auto;
   display: flex;
   justify-content: space-between;
@@ -208,7 +209,7 @@ function LandingPage() {
             ><FaSearch size={isMapDetail ? "25":"30"} color="green" /></button>
           </InputForm>
         </div>
-        <Bookmark className={isMapDetail ? "fadeOff" : ""}>
+        {/* <Bookmark className={isMapDetail ? "fadeOff" : ""}>
             {bookmarkList.map((item, index) => (
               <BookmarkElements onClick={gotoBookmarkDetails} key={index} >
                 <FaRegBookmark size="15" color="green" />
@@ -216,7 +217,10 @@ function LandingPage() {
                 <p>{item.address}</p>
               </BookmarkElements>
             ))}
-        </Bookmark>
+        </Bookmark> */}
+        <Bookmark isMapDetail={isMapDetail} bookmarkList={bookmarkList}
+          gotoBookmarkDetails={gotoBookmarkDetails}
+        />
         
         <div onClick={gotoMapDetail}
           style={{
