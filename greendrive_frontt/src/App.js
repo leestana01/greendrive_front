@@ -10,8 +10,11 @@ import ReviewHome from "./pages/Review/ReviewHome";
 import ReviewNew from "./pages/Review/ReviewNew";
 import ReviewEdit from "./pages/Review/ReviewEdit";
 import ReviewReview from "./pages/Review/ReviewReview";
-
+import Mypage from "./pages/Mypage/Mypage";
 import "./pages/Review/Review.css";
+
+export const ReviewStateContext = React.createContext();
+export const ReviewDispatchContext = React.createContext();
 
 const reducer = (state, action) => {
   let newState = [];
@@ -41,17 +44,6 @@ const reducer = (state, action) => {
   return newState;
 };
 
-export const ReviewStateContext = React.createContext();
-export const ReviewDispatchContext = React.createContext();
-
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Firstpage from "./pages/Login&Join/Firstpage";
-import Join from "./pages/Login&Join/Join";
-import Login from "./pages/Login&Join/Login";
-import Findid from "./pages/Login&Join/Findid";
-import Carregist from "./pages/Login&Join/Carregist";
-import KakaoCode from "./pages/Login&Join/KakaoCode";
-import Mypage from "./pages/Mypage/Mypage";
 
 function App() {
   const [data, dispatch] = useReducer(reducer, []);
