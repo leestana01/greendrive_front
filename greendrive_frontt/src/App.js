@@ -4,7 +4,8 @@ import Join from "./pages/Login&Join/Join";
 import Login from "./pages/Login&Join/Login";
 import Findid from "./pages/Login&Join/Findid";
 import Carregist from "./pages/Login&Join/Carregist";
-import Mypage from "./pages/Mypage/Mypage";
+import Mypage from "./pages/Login&Join/Mypage";
+import KakaoCode from "./pages/Login&Join/KakaoCode";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/Findid" element={<Findid />} />
           <Route path="/Carregist" element={<Carregist />} />
           <Route path="/Mypage" element={<Mypage />} />
+          <Route path="/login/oauth2/callback/kakao" element={<KakaoCode />} />
         </Routes>
       </div>
     </BrowserRouter>
