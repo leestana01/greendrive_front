@@ -27,7 +27,7 @@ const Container = styled.div`
 
 const BodyWrapper = styled.div`
   flex: 1; /* 남은 공간을 채우도록 설정 */
-  overflow: auto; /* 스크롤이 있는 경우 내용을 스크롤합니다. */
+  overflow: hidden; /* 스크롤이 있는 경우 내용을 스크롤합니다. */
   background: #519a09;
 `;
 

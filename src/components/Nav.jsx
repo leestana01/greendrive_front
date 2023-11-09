@@ -89,7 +89,7 @@ const NavBar = ({ getIsMapDetail }) => {
 
   useEffect(() => {
     // 로컬 스토리지에서 username을 읽음 -> 바코드로 출력할 예정
-    const storedUsername = localStorage.getItem("username") || "NOUSER";
+    const storedUsername = "NOUSER" || localStorage.getItem("userId");
     setBarcodeText(storedUsername);
   }, []);
 

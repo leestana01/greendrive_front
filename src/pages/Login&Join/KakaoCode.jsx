@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const failStyle = {
   color: "red",
@@ -12,6 +13,7 @@ const KakaoLoginRedirectHandler = () => {
   const SERVER = process.env.REACT_APP_SERVER;
   const KAKAO_URI = process.env.REACT_APP_KAKAO_URI;
   const CLIENT = process.env.REACT_APP_CLIENT;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -19,11 +21,15 @@ const KakaoLoginRedirectHandler = () => {
       if (code) {
         try {
           const BACKEND_URL = `${SERVER}`;
-          const response = await axios.get(
-            `${CLIENT}${KAKAO_URI}?code=${code}`
-          );
-          console.log(response.data);
-          // 성공적인 처리 로직 추가 (예: 상태 업데이트, 리디렉션 등)
+          await axios
+            .get(`${SERVER}${KAKAO_URI}?code=${code}`)
+            .then((response) => {
+              console.log("로그인성공:", response.data);
+              console.log(response.data.userId);
+              localStorage.setItem("userId", response.data.userId);
+              localStorage.setItem("userId", response.data.Name);
+              navigate("/Mypage");
+            });
         } catch (error) {
           console.error("로그인 실패:", error);
           setLoginError(true);
