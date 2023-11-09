@@ -4,6 +4,7 @@ import Join from "./pages/Login&Join/Join";
 import Login from "./pages/Login&Join/Login";
 import Findid from "./pages/Login&Join/Findid";
 import Carregist from "./pages/Login&Join/Carregist";
+import Mypage from "./pages/Mypage/Mypage";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/Login" element={<Login />} />
           <Route path="/Findid" element={<Findid />} />
           <Route path="/Carregist" element={<Carregist />} />
+          <Route path="/Mypage" element={<Mypage />} />
         </Routes>
       </div>
     </BrowserRouter>
