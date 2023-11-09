@@ -113,9 +113,9 @@ function App() {
           <Route path="/Carregist" element={<Carregist />} />
           <Route path="/login/oauth2/callback/kakao" element={<KakaoCode />} />
           <Route path="/ReviewHome" element={<ReviewHome />} />
-              <Route path="/New" element={<ReviewNew />} />
-              <Route path="/edit/:id" element={<ReviewEdit />} />
-              <Route path="/review/:id" element={<ReviewReview />} />
+          <Route path="/New" element={<ReviewNew />} />
+          <Route path="/edit/:id" element={<ReviewEdit />} />
+          <Route path="/review/:id" element={<ReviewReview />} />
 
           
         </Routes>
