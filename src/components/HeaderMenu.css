@@ -1,0 +1,39 @@
+.logo {
+  width: 122px;
+  height: 22px;
+  left: 135px;
+  top: 110px;
+  bottom: 100px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 235%;
+  display: flex;
+  align-items: center;
+  color: #000000;
+  }
+  .menu {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .menu-item {
+    cursor: pointer;
+    margin: 0 20px;
+    text-align: center;
+    padding-bottom: 5px;
+    transition: border-bottom 0.3s ease;
+  }
+  
+
+  
+  .menu-item:hover {
+    background-color: #cdfff3;
+  }
+  
+  .menu-item:active,
+  .menu-item.active {
+    border-bottom: 2px solid #39904e; 
+
+  }
+  
