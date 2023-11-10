@@ -305,10 +305,17 @@ const Mypage = () => {
     const storedUserId = localStorage.getItem("userId");
     if (storedUserId) {
       setUserId(storedUserId);
-      console.log(userId)
+      console.log(userId);
     }
   }, []);
 
+  useEffect(() => {
+    // 로컬 스토리지에서 이미지 정보를 가져옵니다.
+    const storedImage = localStorage.getItem("profileImage");
+    if (storedImage) {
+      setSelectedImage(storedImage);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -378,6 +385,8 @@ const Mypage = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setSelectedImage(reader.result);
+
+        localStorage.setItem("profileImage", reader.result); //이미지 로컬스토리지에 저장
       };
       if (file) {
         reader.readAsDataURL(file);

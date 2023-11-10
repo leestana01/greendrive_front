@@ -232,6 +232,7 @@ const Login = () => {
   const navigateTofindid = () => {
     navigate("/Findid");
   };
+
   const [loginId, setLoginId] = useState("");
   const [loginPw, setLoginPw] = useState("");
 
