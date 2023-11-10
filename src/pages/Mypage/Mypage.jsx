@@ -256,18 +256,22 @@ const Mypage = () => {
   };
 
   const [name, setName] = useState("");
+  const [userId, setUserId] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+
   const [drivingLicense, setDrivingLicense] = useState("");
   const [registrationLicense, setRegistrationLicense] = useState("");
   const [registrationLicensePreview, setRegistrationLicensePreview] =
     useState("");
   const [drivingLicensePreview, setDrivingLicensePreview] = useState("");
-  const [userId, setUserId] = useState("");
   const [isOpen1, setIsOpen1] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInputFilled, setIsInputFilled] = useState(false);
   //reviewicon, bookmarkicon 선택시 색상 변화 함수
   const [isReviewSelected, setIsReviewSelected] = useState(false);
   const [isBookmarkSelected, setIsBookmarkSelected] = useState(true);
+
+  const SERVER = process.env.REACT_APP_SERVER;
 
   const handleReviewIconClick = () => {
     setIsReviewSelected(true);
@@ -279,14 +283,60 @@ const Mypage = () => {
   const handleLicenseBoxClick = () => {
     navigate("/Carregist");
   };
+  const fetchUserInfo = async (userId) => {
+    try {
+      // 유저 정보 요청
+      const response = await axios.get(
+        `${BACKEND_URL}/users/info?userId=${userId}`
+      );
 
+      // 응답에서 받은 데이터에서 필요한 정보 추출
+      const { name } = response.data;
+
+      // 추출한 정보를 상태에 반영
+      setName(name);
+    } catch (error) {
+      console.error("Failed to fetch user information:", error);
+      // 에러 처리 로직 추가
+    }
+  };
   useEffect(() => {
     // 로컬스토리지에서 userId 가져오기
-    const storedUserId = localStorage.getItem("user_id");
+    const storedUserId = localStorage.getItem("userId");
     if (storedUserId) {
       setUserId(storedUserId);
+      console.log(userId);
     }
   }, []);
+
+  useEffect(() => {
+    // 로컬 스토리지에서 이미지 정보를 가져옵니다.
+    const storedImage = localStorage.getItem("profileImage");
+    if (storedImage) {
+      setSelectedImage(storedImage);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        await axios
+          .get(`${SERVER}/users/info?userId=${userId}`)
+          .then((response) => {
+            // 디버그용 출력문
+            console.log("유저 정보 정상 호출:", response.data);
+            setName(response.data.name);
+            setProfileImage(response.data.profileImage);
+
+            navigate("/Mypage");
+          });
+      } catch (error) {
+        console.error("계정 정보를 불러올 수 없음:", error);
+      }
+    };
+
+    fetchToken();
+  }, [userId]);
 
   //스크롤 방지
   useEffect(() => {
@@ -335,6 +385,8 @@ const Mypage = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setSelectedImage(reader.result);
+
+        localStorage.setItem("profileImage", reader.result); //이미지 로컬스토리지에 저장
       };
       if (file) {
         reader.readAsDataURL(file);
@@ -456,7 +508,7 @@ const Mypage = () => {
               <Licensetext>친환경 자동차 등록하기</Licensetext>
             </Licensebox>
             <Namebox>
-              <Username>{localStorage.Name}</Username>
+              <Username>{name}</Username>
               <Usertext>드라이버님</Usertext>
             </Namebox>
             <Infotext>

@@ -281,6 +281,8 @@ const StyledOption = styled.option`
 `;
 
 const Join = () => {
+  const SERVER = process.env.REACT_APP_SERVER;
+
   const navigate = useNavigate();
   const navigateToFirstpage = () => {
     navigate("/");
@@ -353,10 +355,13 @@ const Join = () => {
       carType: car,
       phoneNo: phone,
     };
+    const BACKEND_URL = SERVER;
 
-    const BACKEND_URL = `백엔드 URL`;
     try {
-      const response = await axios.post(`${BACKEND_URL}/signup`, userData);
+      const response = await axios.post(
+        `${BACKEND_URL}/users/signup`,
+        userData
+      );
       console.log("회원가입 성공:", response.data);
       navigate("/Login");
     } catch (error) {

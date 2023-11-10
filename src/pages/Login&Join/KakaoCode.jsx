@@ -20,14 +20,16 @@ const KakaoLoginRedirectHandler = () => {
       const code = new URL(window.location.href).searchParams.get("code");
       if (code) {
         try {
-          const BACKEND_URL = `${SERVER}`;
           await axios
             .get(`${SERVER}${KAKAO_URI}?code=${code}`)
             .then((response) => {
+              // 디버그용 출력문
               console.log("로그인성공:", response.data);
               console.log(response.data.userId);
               localStorage.setItem("userId", response.data.userId);
-              localStorage.setItem("userId", response.data.Name);
+
+              // navigate(`/users/info?userId=${response.data.userId}`);
+
               navigate("/Mypage");
             });
         } catch (error) {

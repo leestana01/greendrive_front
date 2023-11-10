@@ -228,11 +228,16 @@ const ModalView = styled.div.attrs((props) => ({
 `;
 
 const Findid = () => {
+  const SERVER = process.env.REACT_APP_SERVER;
+  const KAKAO_REST_API = process.env.REACT_APP_KAKAO_REST_API;
+  const KAKAO_URI = process.env.REACT_APP_KAKAO_URI;
+  const CLIENT = process.env.REACT_APP_CLIENT;
   const navigate = useNavigate();
 
   const navigateToLogin = () => {
     navigate("/Login");
   };
+  const [loginId, setLoginId] = useState("");
   const [isOpen1, setIsOpen1] = useState(false);
   //스크롤 방지
   useEffect(() => {
