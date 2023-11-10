@@ -8,6 +8,7 @@ import Kakao from "../Kakao_test";
 import Nav from "./Nav";
 import Header from "./Header";
 import Bookmark from "./Bookmark";
+import SearchList from "./SearchList";
 
 //css
 const Container = styled.div`
@@ -94,7 +95,7 @@ function LandingPage() {
   //데이터 불러오기
   const initBookmark = async (data) => {
     try {
-      const response = await BACKEND_URL.get(`${data}`);
+      const response = await BACKEND_URL.get(`/spaces${data}`);
       const items = response.data;
       setMark(items);
       // console.log(items);
@@ -155,7 +156,9 @@ function LandingPage() {
         <div style={{
           position: isMapDetail ? 'absolute' : 'static',
           zIndex: 1,
-          width: '100%' }}>
+          width: '100%'
+        }}>
+          <SearchList mark={mark} searchPlace={ Place} />
           <InputForm onSubmit={handleSubmit}
             style={{
               justifyContent: isMapDetail ? 'space-evenly' : 'space-between',
