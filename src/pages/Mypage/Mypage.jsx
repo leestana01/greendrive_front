@@ -282,9 +282,14 @@ const Mypage = () => {
 
   useEffect(() => {
     // 로컬스토리지에서 userId 가져오기
-    const storedUserId = localStorage.getItem("user_id");
+    const storedUserId = localStorage.getItem("userId");
     if (storedUserId) {
       setUserId(storedUserId);
+    }
+
+    const storedUsername = localStorage.getItem("name");
+    if (storedUsername) {
+      setUserId(storedUsername);
     }
   }, []);
 
@@ -456,7 +461,7 @@ const Mypage = () => {
               <Licensetext>친환경 자동차 등록하기</Licensetext>
             </Licensebox>
             <Namebox>
-              <Username>{localStorage.Name}</Username>
+              <Username>{name}</Username>
               <Usertext>드라이버님</Usertext>
             </Namebox>
             <Infotext>

@@ -246,22 +246,22 @@ const Login = () => {
   const BACKEND_URL = SERVER;
   const onClick = async () => {
     const userData = {
-      username: loginId,
+      userId: loginId,
       password: loginPw,
     };
 
     try {
-      const response = await axios.post(`${BACKEND_URL}/login/`, userData);
+      const response = await axios.post(`${BACKEND_URL}/users/login`, userData);
       console.log("로그인성공:", response.data);
       if (response.data.key) {
         // 카카오톡으로부터 받은 userId 정보를 localStorage에 저장
         const { userId } = response.data;
         if (userId) {
-          localStorage.setItem("user_id", userId);
+          localStorage.setItem("user_id", userId); // 수정된 부분
         }
         // 마이페이지로 이동
-        navigate("/Mypage");
       }
+      navigate("/Mypage");
     } catch (error) {
       console.error("로그인 실패:", error);
 
@@ -316,6 +316,10 @@ const Login = () => {
                 onChange={(e) => setLoginPw(e.target.value)}
               />
             </InputBox>
+
+            <LoginBox onClick={onClick}>
+              <LoginText>로그인</LoginText>
+            </LoginBox>
             <KakaoLoginBox onClick={handleKakaoLogin}>
               <Kakaoimg>
                 <img
@@ -325,9 +329,6 @@ const Login = () => {
               </Kakaoimg>
               <KakaoLoginText>카카오톡으로 로그인하기</KakaoLoginText>
             </KakaoLoginBox>
-            <LoginBox onClick={onClick}>
-              <LoginText>로그인</LoginText>
-            </LoginBox>
             <FindLinks>
               <Findidment onClick={navigateTofindid}>아이디 찾기</Findidment>
             </FindLinks>
