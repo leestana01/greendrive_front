@@ -12,6 +12,7 @@ import ReviewEdit from "./pages/Review/ReviewEdit";
 import ReviewReview from "./pages/Review/ReviewReview";
 import Mypage from "./pages/Mypage/Mypage";
 import "./pages/Review/Review.css";
+import ReviewShow from "./pages/Review/ReviewShow";
 
 export const ReviewStateContext = React.createContext();
 export const ReviewDispatchContext = React.createContext();
@@ -119,6 +120,8 @@ function App() {
               <Route path="/edit/:id" element={<ReviewEdit />} />
               <Route path="/review/:id" element={<ReviewReview />} />
               <Route path="/Mypage" element={<Mypage />} />
+              <Route path="/ReviewShow" element={<ReviewShow />} />
+
             </Routes>
           </div>
         </BrowserRouter>
