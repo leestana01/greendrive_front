@@ -136,6 +136,18 @@ const Separator2 = styled.div`
     background-color: ${(props) => (props.isSelected ? "#519a09" : "#c4c4c4")};
   }
 `;
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+`;
+
+const Icon = styled.img`
+  width: 20px; // adjust the size as needed
+  height: 20px;
+  margin-right: 5px; // adjust the spacing as needed
+`;
 
 const ReviewHome = (props) => {
   const navigate = useNavigate();
@@ -275,11 +287,36 @@ const ReviewHome = (props) => {
             <Separator1 isSelected={isReviewSelected} />
             <Separator2 isSelected={isBookmarkSelected} />
           </Iconbox>
-          <p>주소 : { publicAddress}</p>
-          <p>시간 : { publicSpaceTime }</p>
-        <p>전화번호 : { publicPhoneNumber }</p>
-       <p>요금: { publicBasicCharge }</p>
-        <p>특이사항 : { publicPlusInfo }</p>
+          <IconWrapper>
+  {/* Add your address icon image source here */}
+  <Icon src={`${process.env.PUBLIC_URL}/images/icon_marker.png`} alt="icon_marker" />
+  <p>주소 : {publicAddress}</p>
+</IconWrapper>
+
+<IconWrapper>
+  {/* Add your time icon image source here */}
+  <Icon src={`${process.env.PUBLIC_URL}/images/icon_clock.png`} alt="icon_clock" />
+  <p>시간 : {publicSpaceTime}</p>
+</IconWrapper>
+
+<IconWrapper>
+  {/* Add your phone icon image source here */}
+  <Icon src={`${process.env.PUBLIC_URL}/images/icon_phone.png`} alt="icon_phone" />
+  <p>전화번호 : {publicPhoneNumber}</p>
+</IconWrapper>
+
+<IconWrapper>
+  {/* Add your fee icon image source here */}
+  <Icon src={`${process.env.PUBLIC_URL}/images/icon_coin.png`} alt="icon_coin" />
+  <p>요금: {publicBasicCharge}</p>
+</IconWrapper>
+
+<IconWrapper>
+  {/* Add your special info icon image source here */}
+  <Icon src={`${process.env.PUBLIC_URL}/images/icon_globe.png`} alt="icon_globe" />
+  <p>특이사항 : {publicPlusInfo}</p>
+</IconWrapper>
+
 
           </Body>
         </BodyWrapper>

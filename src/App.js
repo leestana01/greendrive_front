@@ -15,6 +15,7 @@ import LandingPage from "./components/LandingPage";
 import "./pages/Review/Review.css";
 import ReviewShow from "./pages/Review/ReviewShow";
 
+
 export const ReviewStateContext = React.createContext();
 export const ReviewDispatchContext = React.createContext();
 
@@ -122,6 +123,7 @@ function App() {
               <Route path="/Mypage" element={<Mypage />} />
               <Route path="/LandingPage" element={<LandingPage />} />
               <Route path="/ReviewShow" element={<ReviewShow />} />
+
 
             </Routes>
           </div>
