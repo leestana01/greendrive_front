@@ -256,18 +256,22 @@ const Mypage = () => {
   };
 
   const [name, setName] = useState("");
+  const [userId, setUserId] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+
   const [drivingLicense, setDrivingLicense] = useState("");
   const [registrationLicense, setRegistrationLicense] = useState("");
   const [registrationLicensePreview, setRegistrationLicensePreview] =
     useState("");
   const [drivingLicensePreview, setDrivingLicensePreview] = useState("");
-  const [userId, setUserId] = useState("");
   const [isOpen1, setIsOpen1] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInputFilled, setIsInputFilled] = useState(false);
   //reviewicon, bookmarkicon 선택시 색상 변화 함수
   const [isReviewSelected, setIsReviewSelected] = useState(false);
   const [isBookmarkSelected, setIsBookmarkSelected] = useState(true);
+
+  const SERVER = process.env.REACT_APP_SERVER;
 
   const handleReviewIconClick = () => {
     setIsReviewSelected(true);
@@ -287,10 +291,24 @@ const Mypage = () => {
       setUserId(storedUserId);
     }
 
-    const storedUsername = localStorage.getItem("name");
-    if (storedUsername) {
-      setUserId(storedUsername);
-    }
+    const fetchToken = async () => {
+      try {
+        await axios
+          .get(`${SERVER}/users/info?userId=${userId}`)
+          .then((response) => {
+            // 디버그용 출력문
+            console.log("유저 정보 정상 호출:", response.data);
+            setName(response.data.name);
+            setProfileImage(response.data.profileImage);
+
+            navigate("/Mypage");
+          });
+      } catch (error) {
+        console.error("계정 정보를 불러올 수 없음:", error);
+      }
+    };
+
+    fetchToken();
   }, []);
 
   //스크롤 방지
