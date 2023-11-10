@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FaMapMarkerAlt } from "react-icons/fa";
 
 const { kakao } = window;
 
@@ -8,14 +7,15 @@ const BACKEND_URL = axios.create({
   baseURL: "http://api.greendrive.kro.kr/spaces/", //백엔드 서버 주소
 });
 
+// InfoWindow를 저장할 상태
+let openInfo = null;
+
 const Kakao = ({ searchPlace, isMapDetail, Mark, dataType }) => {
   const [map, setMap] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [mark, setMark] = useState([]);
   const [pos, setPos] = useState([]);
   const [markers, setMarkers] = useState([]);
-  // InfoWindow를 저장할 상태
-  let openInfo = null;
 
   //주차장 id로 상세정보 검색
   const searchParking = async (data) => {
@@ -33,14 +33,13 @@ const Kakao = ({ searchPlace, isMapDetail, Mark, dataType }) => {
     const details = searchParking(id);
     const getData = () => {
       details.then((data) => {
-        console.log(data);
-
+        // console.log(data);
+        if (openInfo !== null) {
+          openInfo.close();
+        }
         const infowindow = new kakao.maps.InfoWindow({
           content: data.parkName,
         });
-        if (openInfo !== null) openInfo.close();
-        console.log(openInfo);
-
         // title을 표시할 InfoWindow 생성
         infowindow.setContent(
           '<div style="padding:5px; word-break: keep-all; min-height: 45px;">' +
@@ -149,30 +148,27 @@ const Kakao = ({ searchPlace, isMapDetail, Mark, dataType }) => {
   }, [pos, map]);
 
   useEffect(() => {
-    //인포윈도우 닫기
-    if (openInfo !== null) openInfo.close();
-
-    // 위치 검색 객체 생성
-    const ps = new kakao.maps.services.Places();
-
     // 검색할 지역 이름
     const keyword = searchPlace;
-
-    ps.keywordSearch(keyword, placesSearchCB, {
-      radius: 1000,
-    });
-
-    // 키워드로 위치 찾기(지도 이동)
-    function placesSearchCB(data, status, pagination) {
-      if (status === kakao.maps.services.Status.OK) {
-        // 검색 결과에서 첫 번째 장소를 가져옴
-        const place = data[0];
-        map.setLevel(6, {
-          anchor: new kakao.maps.LatLng(place.y, place.x),
-        });
-        // 검색된 장소의 좌표로 지도 이동
-        const moveLatLng = new kakao.maps.LatLng(place.y, place.x);
-        map.panTo(moveLatLng);
+    if (openInfo !== null) openInfo.close();
+    if (keyword !== null || keyword !== "") {
+      // 위치 검색 객체 생성
+      const ps = new kakao.maps.services.Places();
+      ps.keywordSearch(keyword, placesSearchCB, {
+        radius: 1000,
+      });
+      // 키워드로 위치 찾기(지도 이동)
+      function placesSearchCB(data, status, pagination) {
+        if (status === kakao.maps.services.Status.OK) {
+          // 검색 결과에서 첫 번째 장소를 가져옴
+          const place = data[0];
+          map.setLevel(6, {
+            anchor: new kakao.maps.LatLng(place.y, place.x),
+          });
+          // 검색된 장소의 좌표로 지도 이동
+          const moveLatLng = new kakao.maps.LatLng(place.y, place.x);
+          map.panTo(moveLatLng);
+        }
       }
     }
   }, [searchPlace]);
