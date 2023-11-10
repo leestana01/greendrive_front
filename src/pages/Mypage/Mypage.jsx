@@ -289,8 +289,12 @@ const Mypage = () => {
     const storedUserId = localStorage.getItem("userId");
     if (storedUserId) {
       setUserId(storedUserId);
+      console.log(userId)
     }
+  }, []);
 
+
+  useEffect(() => {
     const fetchToken = async () => {
       try {
         await axios
@@ -309,7 +313,7 @@ const Mypage = () => {
     };
 
     fetchToken();
-  }, []);
+  }, [userId]);
 
   //스크롤 방지
   useEffect(() => {
