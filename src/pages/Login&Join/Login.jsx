@@ -232,6 +232,7 @@ const Login = () => {
   const navigateTofindid = () => {
     navigate("/Findid");
   };
+
   const [loginId, setLoginId] = useState("");
   const [loginPw, setLoginPw] = useState("");
 
@@ -239,25 +240,27 @@ const Login = () => {
   const [failDivAdded, setFailDivAdded] = useState(false);
 
   const handleKakaoLogin = () => {
-    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API}&redirect_uri=${KAKAO_URI}&response_type=code`;
+    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API}&redirect_uri=${CLIENT}${KAKAO_URI}&response_type=code`;
     window.location.href = kakaoURL;
   };
 
   const BACKEND_URL = SERVER;
   const onClick = async () => {
     const userData = {
-      username: loginId,
+      userId: loginId,
       password: loginPw,
     };
 
     try {
-      const response = await axios.post(`${BACKEND_URL}/login/`, userData);
-      console.log("로그인성공:", response.data);
-      if (response.data.key) {
-        localStorage.setItem("access_token", response.data.key);
-        console.log("저장 성공");
-      }
-      navigate("/Signup2");
+      await axios.post(`${BACKEND_URL}/users/login`, userData)
+      .then(response => {
+        console.log("로그인성공:", response.data);
+        if (response.data.userId == null) {
+          throw new Error(response.data);
+        }
+        localStorage.setItem("userId", response.data.userId); // 수정된 부분
+        navigate("/Mypage");
+      })
     } catch (error) {
       console.error("로그인 실패:", error);
 
@@ -312,6 +315,10 @@ const Login = () => {
                 onChange={(e) => setLoginPw(e.target.value)}
               />
             </InputBox>
+
+            <LoginBox onClick={onClick}>
+              <LoginText>로그인</LoginText>
+            </LoginBox>
             <KakaoLoginBox onClick={handleKakaoLogin}>
               <Kakaoimg>
                 <img
@@ -321,9 +328,6 @@ const Login = () => {
               </Kakaoimg>
               <KakaoLoginText>카카오톡으로 로그인하기</KakaoLoginText>
             </KakaoLoginBox>
-            <LoginBox onClick={onClick}>
-              <LoginText>로그인</LoginText>
-            </LoginBox>
             <FindLinks>
               <Findidment onClick={navigateTofindid}>아이디 찾기</Findidment>
             </FindLinks>

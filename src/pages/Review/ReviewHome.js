@@ -136,7 +136,6 @@ const Separator2 = styled.div`
     background-color: ${(props) => (props.isSelected ? "#519a09" : "#c4c4c4")};
   }
 `;
-
 const IconWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -255,70 +254,69 @@ const ReviewHome = (props) => {
             <MyHeader>
               <Logo>GreenDriver</Logo>
             </MyHeader>
-            <Title>{publicSpaceName}</Title>
-            
+            {/* <TitleLineA /> */}
+            <Title>{publicSpaceName}</Title> 
+
             <Iconbox>
-              <Reviewicon
-                onClick={() => {
-                  handleReviewIconClick();
-                  setIsBookmarkSelected(false);
-                }}
-              >
-                {/* Add your review icon image source here */}
-                <img
-                  src={`${process.env.PUBLIC_URL}/images/reviewicon${
-                    isReviewSelected ? "_green" : ""
-                  }.png`}
-                  alt="reviewicon"
-                />
-              </Reviewicon>
-              <Bookmarkicon
-                onClick={() => {
-                  handleBookmarkIconClick();
-                  setIsReviewSelected(false);
-                }}
-              >
-                {/* Add your bookmark icon image source here */}
-                <img
-                  src={`${process.env.PUBLIC_URL}/images/bookmarkicon${
-                    isBookmarkSelected ? "_green" : ""
-                  }.png`}
-                  alt="bookmarkicon"
-                />
-              </Bookmarkicon>
-              <Separator1 isSelected={isReviewSelected} />
-              <Separator2 isSelected={isBookmarkSelected} />
-            </Iconbox>
+            <Reviewicon
+              onClick={() => {
+                handleReviewIconClick();
+                setIsBookmarkSelected(false);
+              }}
+            >
+              <img
+                src={`${process.env.PUBLIC_URL}/images/reviewicon${
+                  isReviewSelected ? "_green" : ""
+                }.png`}
+                alt="reviewicon"
+              />
+            </Reviewicon>
+            <Bookmarkicon
+              onClick={() => {
+                handleBookmarkIconClick();
+                setIsReviewSelected(false);
+              }}
+            >
+              <img
+                src={`${process.env.PUBLIC_URL}/images/bookmarkicon${
+                  isBookmarkSelected ? "_green" : ""
+                }.png`}
+                alt="bookmarkicon"
+              />
+            </Bookmarkicon>
+            <Separator1 isSelected={isReviewSelected} />
+            <Separator2 isSelected={isBookmarkSelected} />
+          </Iconbox>
+          <IconWrapper>
+  {/* Add your address icon image source here */}
+  <Icon src={`${process.env.PUBLIC_URL}/images/icon_marker.png`} alt="icon_marker" />
+  <p>주소 : {publicAddress}</p>
+</IconWrapper>
 
-            <IconWrapper>
-             
-              <Icon src={`${process.env.PUBLIC_URL}/images/icon_marker.png`} alt="icon_marker" />
-              <p>주소 : {publicAddress}</p>
-            </IconWrapper>
+<IconWrapper>
+  {/* Add your time icon image source here */}
+  <Icon src={`${process.env.PUBLIC_URL}/images/icon_clock.png`} alt="icon_clock" />
+  <p>시간 : {publicSpaceTime}</p>
+</IconWrapper>
 
-            <IconWrapper>
-        
-            <Icon src={`${process.env.PUBLIC_URL}/images/icon_clock.png`} alt="icon_clock" />
-              <p>시간 : {publicSpaceTime}</p>
-            </IconWrapper>
+<IconWrapper>
+  {/* Add your phone icon image source here */}
+  <Icon src={`${process.env.PUBLIC_URL}/images/icon_phone.png`} alt="icon_phone" />
+  <p>전화번호 : {publicPhoneNumber}</p>
+</IconWrapper>
 
-            <IconWrapper>
-          
-            <Icon src={`${process.env.PUBLIC_URL}/images/icon_phone.png`} alt="icon_phone" />
-              <p>전화번호 : {publicPhoneNumber}</p>
-            </IconWrapper>
+<IconWrapper>
+  {/* Add your fee icon image source here */}
+  <Icon src={`${process.env.PUBLIC_URL}/images/icon_coin.png`} alt="icon_coin" />
+  <p>요금: {publicBasicCharge}</p>
+</IconWrapper>
 
-            <IconWrapper>
-            
-            <Icon src={`${process.env.PUBLIC_URL}/images/icon_coin.png`} alt="icon_coin" />
-              <p>요금: {publicBasicCharge}</p>
-            </IconWrapper>
+<IconWrapper>
+  {/* Add your special info icon image source here */}
+  <Icon src={`${process.env.PUBLIC_URL}/images/icon_globe.png`} alt="icon_globe" />
+  <p>특이사항 : {publicPlusInfo}</p>
+</IconWrapper>
 
-            <IconWrapper>
-            
-              <Icon src={`${process.env.PUBLIC_URL}/images/icon_globe.png`} alt="icon_globe" />
-              <p>특이사항 : {publicPlusInfo}</p>
-            </IconWrapper>
 
           </Body>
         </BodyWrapper>

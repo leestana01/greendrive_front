@@ -11,6 +11,7 @@ import ReviewNew from "./pages/Review/ReviewNew";
 import ReviewEdit from "./pages/Review/ReviewEdit";
 import ReviewReview from "./pages/Review/ReviewReview";
 import Mypage from "./pages/Mypage/Mypage";
+import LandingPage from "./components/LandingPage";
 import "./pages/Review/Review.css";
 import ReviewShow from "./pages/Review/ReviewShow";
 
@@ -45,7 +46,6 @@ const reducer = (state, action) => {
   localStorage.setItem("review", JSON.stringify(newState));
   return newState;
 };
-
 
 function App() {
   const [data, dispatch] = useReducer(reducer, []);
@@ -121,6 +121,7 @@ function App() {
               <Route path="/edit/:id" element={<ReviewEdit />} />
               <Route path="/review/:id" element={<ReviewReview />} />
               <Route path="/Mypage" element={<Mypage />} />
+              <Route path="/LandingPage" element={<LandingPage />} />
               <Route path="/ReviewShow" element={<ReviewShow />} />
 
 

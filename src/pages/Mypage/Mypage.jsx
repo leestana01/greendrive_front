@@ -95,7 +95,7 @@ const Profileicon = styled.div`
 const Cameraicon = styled.div`
   position: absolute;
   top: 135px;
-  left: 95px;
+  margin-left: 105px;
   width: 19px;
   height: 19px;
   flex-shrink: 0;
@@ -214,6 +214,12 @@ const Bookmarkicon = styled.div`
   }
 `;
 
+const ProfileImage = styled.img`
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+`;
+
 // Separator 컴포넌트를 아이콘 상자 안에 위치시킵니다.
 const Separator1 = styled.div`
   position: absolute;
@@ -250,18 +256,22 @@ const Mypage = () => {
   };
 
   const [name, setName] = useState("");
+  const [userId, setUserId] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+
   const [drivingLicense, setDrivingLicense] = useState("");
   const [registrationLicense, setRegistrationLicense] = useState("");
   const [registrationLicensePreview, setRegistrationLicensePreview] =
     useState("");
   const [drivingLicensePreview, setDrivingLicensePreview] = useState("");
-
   const [isOpen1, setIsOpen1] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInputFilled, setIsInputFilled] = useState(false);
   //reviewicon, bookmarkicon 선택시 색상 변화 함수
   const [isReviewSelected, setIsReviewSelected] = useState(false);
   const [isBookmarkSelected, setIsBookmarkSelected] = useState(true);
+
+  const SERVER = process.env.REACT_APP_SERVER;
 
   const handleReviewIconClick = () => {
     setIsReviewSelected(true);
@@ -273,6 +283,61 @@ const Mypage = () => {
   const handleLicenseBoxClick = () => {
     navigate("/Carregist");
   };
+  const fetchUserInfo = async (userId) => {
+    try {
+      // 유저 정보 요청
+      const response = await axios.get(
+        `${BACKEND_URL}/users/info?userId=${userId}`
+      );
+
+      // 응답에서 받은 데이터에서 필요한 정보 추출
+      const { name } = response.data;
+
+      // 추출한 정보를 상태에 반영
+      setName(name);
+    } catch (error) {
+      console.error("Failed to fetch user information:", error);
+      // 에러 처리 로직 추가
+    }
+  };
+  useEffect(() => {
+    // 로컬스토리지에서 userId 가져오기
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) {
+      setUserId(storedUserId);
+      console.log(userId);
+    }
+  }, []);
+
+  useEffect(() => {
+    // 로컬 스토리지에서 이미지 정보를 가져옵니다.
+    const storedImage = localStorage.getItem("profileImage");
+    if (storedImage) {
+      setSelectedImage(storedImage);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        await axios
+          .get(`${SERVER}/users/info?userId=${userId}`)
+          .then((response) => {
+            // 디버그용 출력문
+            console.log("유저 정보 정상 호출:", response.data);
+            setName(response.data.name);
+            setProfileImage(response.data.profileImage);
+
+            navigate("/Mypage");
+          });
+      } catch (error) {
+        console.error("계정 정보를 불러올 수 없음:", error);
+      }
+    };
+
+    fetchToken();
+  }, [userId]);
+
   //스크롤 방지
   useEffect(() => {
     if (isOpen1) {
@@ -309,7 +374,26 @@ const Mypage = () => {
   const [failDivAdded, setFailDivAdded] = useState(false);
 
   const BACKEND_URL = "" || "";
+  const [selectedImage, setSelectedImage] = useState(null);
 
+  const handleCameraIconClick = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+
+        localStorage.setItem("profileImage", reader.result); //이미지 로컬스토리지에 저장
+      };
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
+  };
   const handleModal = () => {
     setIsOpen1(true);
   };
@@ -399,12 +483,16 @@ const Mypage = () => {
               </Settingicon>
             </Topbar>
             <Profileicon>
-              <img
-                src={`${process.env.PUBLIC_URL}/images/profileicon.png`}
-                alt="profile"
-              />
+              {selectedImage ? (
+                <ProfileImage src={selectedImage} alt="selected" />
+              ) : (
+                <img
+                  src={`${process.env.PUBLIC_URL}/images/profileicon.png`}
+                  alt="profile"
+                />
+              )}
             </Profileicon>
-            <Cameraicon>
+            <Cameraicon onClick={handleCameraIconClick}>
               <img
                 src={`${process.env.PUBLIC_URL}/images/camera_mypage.png`}
                 alt="cameraicon"
