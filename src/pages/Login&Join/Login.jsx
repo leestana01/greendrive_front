@@ -254,14 +254,10 @@ const Login = () => {
     try {
       const response = await axios.post(`${BACKEND_URL}/users/login`, userData);
       console.log("로그인성공:", response.data);
-      if (response.data.key) {
-        // 카카오톡으로부터 받은 userId 정보를 localStorage에 저장
-        const { userId } = response.data;
-        if (userId) {
-          localStorage.setItem("user_id", userId); // 수정된 부분
-        }
-        // 마이페이지로 이동
+      if (response.data.userId == null) {
+        throw new Error(response.data);
       }
+      localStorage.setItem("user_id", response.data.userId); // 수정된 부분
       navigate("/Mypage");
     } catch (error) {
       console.error("로그인 실패:", error);
