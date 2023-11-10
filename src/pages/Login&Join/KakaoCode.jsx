@@ -34,7 +34,7 @@ const KakaoLoginRedirectHandler = () => {
               navigate(`/users/info?userId=${response.data.userId}`);
               navigate(`/users/info?userId=${response.data.name}`);
 
-              //navigate("/Mypage");
+              navigate("/Mypage");
             });
         } catch (error) {
           console.error("로그인 실패:", error);

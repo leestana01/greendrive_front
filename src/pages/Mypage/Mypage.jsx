@@ -279,17 +279,28 @@ const Mypage = () => {
   const handleLicenseBoxClick = () => {
     navigate("/Carregist");
   };
+  const fetchUserInfo = async (userId) => {
+    try {
+      // 유저 정보 요청
+      const response = await axios.get(
+        `${BACKEND_URL}/users/info?userId=${userId}`
+      );
 
+      // 응답에서 받은 데이터에서 필요한 정보 추출
+      const { name } = response.data;
+
+      // 추출한 정보를 상태에 반영
+      setName(name);
+    } catch (error) {
+      console.error("Failed to fetch user information:", error);
+      // 에러 처리 로직 추가
+    }
+  };
   useEffect(() => {
     // 로컬스토리지에서 userId 가져오기
     const storedUserId = localStorage.getItem("userId");
     if (storedUserId) {
       setUserId(storedUserId);
-    }
-
-    const storedUsername = localStorage.getItem("name");
-    if (storedUsername) {
-      setUserId(storedUsername);
     }
   }, []);
 

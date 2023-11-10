@@ -153,7 +153,7 @@ const Firstpage = () => {
     };
 
     try {
-      const response = await axios.post(`${BACKEND_URL}/login/`, userData);
+      const response = await axios.post(`${BACKEND_URL}/login`, userData);
       console.log("로그인성공:", response.data);
       if (response.data.key) {
         // 카카오톡으로부터 받은 userId 정보를 localStorage에 저장
