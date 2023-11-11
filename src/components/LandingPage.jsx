@@ -38,6 +38,7 @@ const BodyWrapper = styled.div`
   overflow: auto;
   transition: padding 0.3s ease;
   padding-top: 0;
+  padding-bottom: 0;
   .fadeOff{
     display: none;
   }
@@ -49,6 +50,7 @@ const InputForm = styled.form`
   align-items: center;
   justify-content: space-between;
   position: relative;
+  // background-color: white;
   input{
     height: 30px;
     width: 80%;
@@ -66,6 +68,7 @@ const InputForm = styled.form`
     position: absolute;
     right: 30px;
   }
+  z-index: 3;
 `;
 const Logo = styled.div`
   border-radius: 50%;
@@ -87,10 +90,10 @@ const BACKEND_URL = axios.create({
 function LandingPage() {
   const [InputText, setInputText] = useState("");
   const [Place, setPlace] = useState("");
-  const [bookmarkList, setBookmarkList] = useState([]);
   const [dataType, setDataType] = useState(null);
   const [mark, setMark] = useState([]);
   const [isMapDetail, setIsMapDetail] = useState(false);
+  const [isSearch, setIsSearch] = useState(false);
 
   //데이터 불러오기
   const initBookmark = async (data) => {
@@ -98,8 +101,6 @@ function LandingPage() {
       const response = await BACKEND_URL.get(`/spaces${data}`);
       const items = response.data;
       setMark(items);
-      // console.log(items);
-      // setBookmarkList(items.slice(0, 2));
     } catch (error) {
       console.error("Error:", error.message);
     }
@@ -114,6 +115,7 @@ function LandingPage() {
   };
   
   const navigate = useNavigate();
+  
   const gotoBookmarkDetails = () => {
     navigate('/');
   }
@@ -132,15 +134,19 @@ function LandingPage() {
       setDataType(1);
     }
     else {
-      initBookmark("");
+      // initBookmark("");
       setDataType(null);
       setPlace(InputText);
+      setIsSearch(true);
     }
     setInputText("");
   };
 
   const handleIsMapDetail = (isMapDetail) => {
     setIsMapDetail(isMapDetail);
+  }
+  const handleIsSearch = (isSearch) => {
+    setIsSearch(isSearch);
   }
 
 
@@ -158,7 +164,7 @@ function LandingPage() {
           zIndex: 1,
           width: '100%'
         }}>
-          <SearchList mark={mark} searchPlace={ Place} />
+          <SearchList mark={mark} searchPlace={Place} isSearch={isSearch}/>
           <InputForm onSubmit={handleSubmit}
             style={{
               justifyContent: isMapDetail ? 'space-evenly' : 'space-between',
@@ -186,7 +192,8 @@ function LandingPage() {
             ><FaSearch size={isMapDetail ? "25":"30"} color="green" /></button>
           </InputForm>
         </div>
-        <Bookmark isMapDetail={isMapDetail} bookmarkList={bookmarkList}
+        <Bookmark isMapDetail={isMapDetail} 
+        
           gotoBookmarkDetails={gotoBookmarkDetails}
         />
         
@@ -202,7 +209,7 @@ function LandingPage() {
           />
         </div >
       </BodyWrapper>
-      <Nav getIsMapDetail={handleIsMapDetail} />
+      <Nav getIsMapDetail={handleIsMapDetail} getIsSearch={handleIsSearch} />
     </Container>
   );
 }

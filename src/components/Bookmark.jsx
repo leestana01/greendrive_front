@@ -1,19 +1,24 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components';
 import axios from 'axios';
-import {  FaRegBookmark } from 'react-icons/fa';
+import {  FaBookmark,FaWindowClose } from 'react-icons/fa';
 
 const BookmarkStyled = styled.div`
-  margin: 20px auto;
+  margin: 10px auto;
+  margin-bottom: 0;
   display: flex;
-  justify-content: space-between;
   .fadeOff{
     display: none;
   }
+  width: auto;
+  overflow-x: auto;
+  padding-bottom: 20px;
+  
+  
 `;
 const BookmarkElements = styled.div`
   width: 42%;
-  height: 60px;
+  min-height: 60px;
   text-align: left;
   border-radius: 10px;
   padding: 10px;
@@ -24,7 +29,8 @@ const BookmarkElements = styled.div`
     float: right;
   }
   h5{
-    padding-top: 15px;
+    padding-top: 10px;
+    padding-bottom: 5px;
     margin: 0;
   }
   p{
@@ -37,41 +43,59 @@ const BACKEND_URL = axios.create({
     baseURL: process.env.REACT_APP_SERVER, //백엔드 서버 주소
 });
 
-const Bookmark = ({isMapDetail, bookmarkList, gotoBookmarkDetails}) => {
+const Bookmark = ({isMapDetail, gotoBookmarkDetails}) => {
     const [isLogin, setIsLogin] = useState(false);
     const [userBookmark, setUserBookmark] = useState([]);
 
     useEffect(() => {
         if (localStorage.getItem('userId')) {
-            setIsLogin(true);
+          setIsLogin(true);
+          getBookmark(localStorage.getItem('userId'));
         }
-        getBookmark();
     }, []);
 
 
 
      //즐겨찾기 조회
-    const getBookmark = async () => {
+    const getBookmark = async (userId) => {
         try {
-            const response = await BACKEND_URL.get('/users/favorites?userId=testuser1');
+            const response = await BACKEND_URL.get(`/users/favorites?userId=${userId}`);
             const items = response.data;
-            console.log(items);
+            //사용자 즐겨찾기 조회
+            // console.log(items);
             setUserBookmark(items);
         } catch (error) {
             console.error("Error:", error.message);
         }
-    };
+  };
+  
+  const deleteBookmark = async (spaceId) => {
+  try {
+    const response = await BACKEND_URL.delete('/users/favorites', {
+      data: {
+        userId: localStorage.getItem("userId"),
+        spaceId: spaceId
+      }
+    });
+    console.log("Success delete bookmark", response.data);
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+};
+
 
   return (
       <div>
           <BookmarkStyled className={isMapDetail ? "fadeOff" : ""}>
-            {bookmarkList.map((item, index) => (
+            {userBookmark.map((item, index) => (
               <BookmarkElements onClick={gotoBookmarkDetails} key={index} >
-                <FaRegBookmark size="15" color="green" />
+                <FaWindowClose size="15" color="red" onClick={() => deleteBookmark(item.id)} />
+                <FaBookmark size="15" color="green" />
                 <h5>{item.parkName}</h5>
                 <p>{item.address}</p>
               </BookmarkElements>
             ))}
+            
         </BookmarkStyled></div>
   )
 }

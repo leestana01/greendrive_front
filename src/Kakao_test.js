@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+
 const { kakao } = window;
 
 const BACKEND_URL = axios.create({
-  baseURL: "http://api.greendrive.kro.kr/spaces/", //백엔드 서버 주소
+  baseURL: process.env.REACT_APP_SERVER, //백엔드 서버 주소
 });
 
 // InfoWindow를 저장할 상태
@@ -20,7 +21,7 @@ const Kakao = ({ searchPlace, isMapDetail, Mark, dataType }) => {
   //주차장 id로 상세정보 검색
   const searchParking = async (data) => {
     try {
-      const response = await BACKEND_URL.get(`${data}`);
+      const response = await BACKEND_URL.get(`/spaces/${data}`);
       const items = response.data;
       return items;
     } catch (error) {
@@ -30,6 +31,7 @@ const Kakao = ({ searchPlace, isMapDetail, Mark, dataType }) => {
 
   /// 마커 클릭 이벤트 핸들러
   function handleMarkerClick(marker, id) {
+    //promise data 가져오기
     const details = searchParking(id);
     const getData = () => {
       details.then((data) => {
