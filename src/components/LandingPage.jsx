@@ -80,6 +80,45 @@ const Logo = styled.div`
     height: 100%;
   }
 `;
+const ParkingDetailInfo = styled.div`
+  background: white;
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  transform: translateX(-50%);
+  transition: all 0.3s;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  height: 25%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+`
+const DetailButton = styled.div`
+text-align: center;
+background-color: green;
+border-radius: 10px;
+color: white;
+font-weight: bold;
+width: 80%;
+padding-top: 15px;
+padding-bottom: 15px;
+cursor: pointer;
+`
+const TextInfoDiv = styled.div`
+text-align: left;
+width: 80%;
+h3{
+    margin: 5px;
+    margin-top: 20px;
+  }
+  p{
+    margin: 5px;
+    margin-bottom: 20px;
+  }
+`
 
 const BACKEND_URL = axios.create({
     baseURL: process.env.REACT_APP_SERVER, //백엔드 서버 주소
@@ -122,6 +161,9 @@ function LandingPage() {
   const gotoMapDetail = () => {
     setIsMapDetail(true);
   }
+  const gotoDetail = () => {
+    // navigate("/details");
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -130,8 +172,11 @@ function LandingPage() {
       setIsSearch(true);
     setInputText("");
     setIsMapDetail(false);
-    
   };
+  const [parkingDetailInfo, setParkingDetailInfo] = useState(null);
+  function handleParkingDetailInfo(parkingInfo) {
+    setParkingDetailInfo(parkingInfo);
+  }
 
 
   return (
@@ -190,8 +235,16 @@ function LandingPage() {
             isMapDetail={isMapDetail}
             Mark={mark}
             dataType={dataType}
+            getParkingDetailInfo={handleParkingDetailInfo}
           />
         </div >
+        {parkingDetailInfo !== null ?<ParkingDetailInfo >
+         <TextInfoDiv>
+            <h3>{parkingDetailInfo.parkName}</h3>
+            <p>{parkingDetailInfo.address}</p>
+         </TextInfoDiv>
+          <DetailButton onClick={gotoDetail}>상세 정보 확인</DetailButton>
+        </ParkingDetailInfo>:""}
       </BodyWrapper>
 
       <Nav />

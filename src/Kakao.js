@@ -10,7 +10,13 @@ const BACKEND_URL = axios.create({
 // InfoWindow를 저장할 상태
 let openInfo = null;
 
-const Kakao = ({ searchPlace, isMapDetail, Mark, dataType }) => {
+const Kakao = ({
+  searchPlace,
+  isMapDetail,
+  Mark,
+  dataType,
+  getParkingDetailInfo,
+}) => {
   const [map, setMap] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [mark, setMark] = useState([]);
@@ -55,8 +61,23 @@ const Kakao = ({ searchPlace, isMapDetail, Mark, dataType }) => {
         // 클릭된 마커 주변에 InfoWindow 표시
         infowindow.open(map, marker);
 
+        // InfoWindow 클릭 이벤트 리스너 추가
+        kakao.maps.event.addListener(infowindow, "click", () => {
+          // 여기에 인포윈도우 클릭 시 실행할 코드 작성
+          console.log("인포윈도우 클릭 이벤트 발생");
+        });
+
         // 열린 InfoWindow 상태 업데이트
         openInfo = infowindow;
+      });
+    };
+    getData();
+  }
+  function handleLocationInfoWindow(id) {
+    const details = searchParking(id);
+    const getData = () => {
+      details.then((data) => {
+        getParkingDetailInfo(data);
       });
     };
     getData();
@@ -143,6 +164,7 @@ const Kakao = ({ searchPlace, isMapDetail, Mark, dataType }) => {
         // 마커를 클릭할 때 이벤트 핸들러 등록
         kakao.maps.event.addListener(marker, "click", () => {
           handleMarkerClick(marker, pos[i].id);
+          handleLocationInfoWindow(pos[i].id);
         });
       }
     }
@@ -179,7 +201,7 @@ const Kakao = ({ searchPlace, isMapDetail, Mark, dataType }) => {
       id="Map"
       style={{
         width: "100%",
-        height: isMapDetail ? "100%" : "500px",
+        height: isMapDetail ? "100%" : "450px",
         zIndex: "0",
       }}
     ></div>
