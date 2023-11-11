@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Nav from "../../components/Nav";
-
 import MyHeader from "../../components/Header";
 
 const Container = styled.div`
@@ -265,7 +264,7 @@ const ReviewHome = (props) => {
             <Reviewicon
               onClick={() => {
                 handleReviewIconClick();
-                setIsBookmarkSelected(false);
+                setIsBookmarkSelected(true);
               }}
             >
               <img
@@ -278,7 +277,7 @@ const ReviewHome = (props) => {
             <Bookmarkicon
               onClick={() => {
                 handleBookmarkIconClick();
-                setIsReviewSelected(false);
+                setIsReviewSelected(true);
               }}
             >
               <img
