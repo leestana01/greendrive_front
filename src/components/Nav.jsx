@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { useNavigate } from 'react-router-dom';
 import { FaHome, FaUserCircle } from "react-icons/fa";
 import { IoWalletOutline } from "react-icons/io5";
 import bwipjs from "bwip-js";
@@ -82,10 +83,11 @@ const NavLink = styled.div`
   }
 `;
 
-const NavBar = ({ getIsMapDetail, getIsSearch }) => {
+const NavBar = () => {
   const [isBarcodeOpen, setBarcodeOpen] = useState(false);
   const barcodeCanvasRef = useRef(null);
   const [barcodeText, setBarcodeText] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     // 로컬 스토리지에서 username을 읽음 -> 바코드로 출력할 예정
@@ -113,16 +115,21 @@ const NavBar = ({ getIsMapDetail, getIsSearch }) => {
     }
   }, [barcodeText]);
 
-  const setIsMapDetail = () => {
-    getIsMapDetail(false);
-  };
-  const setIsSearch = () => {
-    getIsSearch(false);
-  };
-  const handleClick = () => {
-    setIsMapDetail();
-    setIsSearch();
-};
+  function handleNavigate() {
+    // navigate("/LandingPage");
+    window.location.reload();
+  }
+
+  // const setIsMapDetail = () => {
+  //   getIsMapDetail(false);
+  // };
+  // const setIsSearch = () => {
+  //   getIsSearch(false);
+  // };
+//   const handleClick = () => {
+//     setIsMapDetail();
+//     setIsSearch();
+// };
 
   return (
     <NavigationBar>
@@ -137,7 +144,8 @@ const NavBar = ({ getIsMapDetail, getIsSearch }) => {
 
       <BarcodeIcon size="60" onClick={() => setBarcodeOpen(!isBarcodeOpen)} />
       <NavItems>
-        <NavLink onClick={handleClick}>
+        <NavLink onClick={handleNavigate}>
+        {/* <NavLink onClick={handleClick}> */}
           <FaHome size="40" color="green" />홈
         </NavLink>
         <NavLink>

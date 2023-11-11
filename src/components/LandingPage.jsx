@@ -3,8 +3,7 @@ import styled from "styled-components";
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-// import Kakao from "../Kakao";
-import Kakao from "../Kakao_test";
+import Kakao from "../Kakao";
 import Nav from "./Nav";
 import Header from "./Header";
 import Bookmark from "./Bookmark";
@@ -117,7 +116,8 @@ function LandingPage() {
   const navigate = useNavigate();
   
   const gotoBookmarkDetails = () => {
-    navigate('/');
+    // 상세정보로 이동
+    // navigate('/');
   }
   const gotoMapDetail = () => {
     setIsMapDetail(true);
@@ -125,29 +125,13 @@ function LandingPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (InputText.includes('공영')) {
-      initBookmark("/search?keyword=공영");
-      setDataType(0);
-    }
-    else if (InputText.includes('민영')) {
-      initBookmark("/search?keyword=민영");
-      setDataType(1);
-    }
-    else {
-      // initBookmark("");
       setDataType(null);
       setPlace(InputText);
       setIsSearch(true);
-    }
     setInputText("");
+    setIsMapDetail(false);
+    
   };
-
-  const handleIsMapDetail = (isMapDetail) => {
-    setIsMapDetail(isMapDetail);
-  }
-  const handleIsSearch = (isSearch) => {
-    setIsSearch(isSearch);
-  }
 
 
   return (
@@ -193,14 +177,14 @@ function LandingPage() {
           </InputForm>
         </div>
         <Bookmark isMapDetail={isMapDetail} 
-        
           gotoBookmarkDetails={gotoBookmarkDetails}
         />
         
         <div onClick={gotoMapDetail}
           style={{
             overflow: "hidden",
-            height: isMapDetail? "90vh": "auto"
+            height: isMapDetail ? "90vh" : "auto",
+            zIndex:0
           }}>
           <Kakao searchPlace={Place}
             isMapDetail={isMapDetail}
@@ -209,7 +193,8 @@ function LandingPage() {
           />
         </div >
       </BodyWrapper>
-      <Nav getIsMapDetail={handleIsMapDetail} getIsSearch={handleIsSearch} />
+
+      <Nav />
     </Container>
   );
 }
