@@ -45,7 +45,7 @@ const ImgBox = styled.div`
     width: 130px;
     height: 90px; 
     overflow: hidden;
-    background-color: lightgreen;
+    background-color: #70CA16;
     float: left;
     margin-right: 10px;
     user-select: none;
@@ -81,6 +81,9 @@ flex-direction: column;
 justify-content: space-between;
 height: 90px;
 
+`
+const IconImg = styled.img`
+width: 60%;
 `
 
 const BACKEND_URL = axios.create({
@@ -120,16 +123,18 @@ const MyReview = ({isDropDown, getUserReviewLength}) => {
             {userReview.map((item, index) => (
                 <ReviewElements onClick={gotoBookmarkDetails} key={index} >
                 <ImgBox>
-                  {item.image.data !== "" ? 
-                  <ReviewImg src={`data:image/png;base64,${item.image.data}`} /> :
-                  <FaMap/>}
+                  {item.image.data !== "" ?
+                    <ReviewImg src={`data:image/png;base64,${item.image.data}`} /> :
+                    <IconImg src={`${process.env.PUBLIC_URL}/images/greenDrive_Icon.png`}
+                    alt="logo_icon"/>}
+                  {/* <FaMap size="30" color="#eeeeee"/>} */}
                 </ImgBox>
                <InfoDiv>
                   <h5>{item.content}</h5>
                   
                   <BottomInfos>
                     <p>{item.date}</p>
-                    <Likes><FaHeart size="15" color="green"/><p>{item.likes}</p></Likes>
+                    <Likes><FaHeart size="15" color="#519A09"/><p>{item.likes}</p></Likes>
                   </BottomInfos>
                </InfoDiv>
                 
