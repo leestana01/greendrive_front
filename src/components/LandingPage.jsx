@@ -9,6 +9,7 @@ import Nav from "./Nav";
 import Header from "./Header";
 import Bookmark from "./Bookmark";
 import SearchList from "./SearchList";
+import MyBookmark from "./My_bookmark";
 
 //css
 const Container = styled.div`
@@ -115,7 +116,7 @@ function LandingPage() {
   };
   
   const navigate = useNavigate();
-  
+
   const gotoBookmarkDetails = () => {
     navigate('/');
   }
@@ -193,7 +194,6 @@ function LandingPage() {
           </InputForm>
         </div>
         <Bookmark isMapDetail={isMapDetail} 
-        
           gotoBookmarkDetails={gotoBookmarkDetails}
         />
         
