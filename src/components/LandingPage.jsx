@@ -161,8 +161,8 @@ function LandingPage() {
   const gotoMapDetail = () => {
     setIsMapDetail(true);
   }
-  const gotoDetail = () => {
-    // navigate("/details");
+  const gotoDetail = (id) => {
+    navigate(`/ReviewHome/${id}`);
   }
 
   const handleSubmit = (e) => {
@@ -243,7 +243,7 @@ function LandingPage() {
             <h3>{parkingDetailInfo.parkName}</h3>
             <p>{parkingDetailInfo.address}</p>
          </TextInfoDiv>
-          <DetailButton onClick={gotoDetail}>상세 정보 확인</DetailButton>
+          <DetailButton onClick={()=>gotoDetail(parkingDetailInfo.id)}>상세 정보 확인</DetailButton>
         </ParkingDetailInfo>:""}
       </BodyWrapper>
 

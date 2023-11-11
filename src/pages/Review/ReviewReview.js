@@ -1,11 +1,10 @@
-
 import { useState, useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ReviewStateContext } from "../../App";
 import { getStringDate } from "../../util/date";
 import { emotionList } from "../../util/emotion";
-import MyHeader from "../../components/MyHeader"; 
-import MyButton from "../../components/MyButton"; 
+import MyHeader from "../../components/MyHeader";
+import MyButton from "../../components/MyButton";
 import styled from "styled-components";
 import Nav from "../../components/Nav";
 import { async } from "q";
@@ -66,59 +65,51 @@ const ReviewReview = () => {
   const [userName, setUserName] = useState(""); // Added state for the user's name
   const SERVER = process.env.REACT_APP_SERVER;
 
-  const fetchData = async() => {
-    try{
-      await axios
-      .get(`${SERVER}/reviews/${id}`)
-      .then(response => {
+  const fetchData = async () => {
+    try {
+      await axios.get(`${SERVER}/reviews/${id}`).then((response) => {
         setData(response.data);
         setImageData(data.image.data);
         setContent(data.content);
         console.log(data);
       });
-    } catch (error){
+    } catch (error) {
       console.log(error);
     }
-  }
+  };
   fetchData();
 
-    return (
-    
-      <div className="ReviewPage">
-          <Container>
-  <BodyWrapper>
-         <Body>
-          
-        <MyHeader
-          leftChild={
-            <MyButton text={"< 뒤로가기"} onClick={() => navigate(-1)} />
-          }
-          rightChild={
-            <MyButton
-              text={"수정하기"}
+  return (
+    <div className="ReviewPage">
+      <Container>
+        <BodyWrapper>
+          <Body>
+            <MyHeader
+              leftChild={
+                <MyButton text={"< 뒤로가기"} onClick={() => navigate(-1)} />
+              }
+              rightChild={<MyButton text={"수정하기"} />}
             />
-          }
-        />
-        <article>
-          <section>
-            <h4>${userName}님의 리뷰</h4>
-            <div>
-              <img src={`data:image/png;base64,${imageData}`} />
-            </div>
-          </section>
-          <section>
-            <h4>리뷰내용</h4>
-            <div className="review_content_wrapper">
-              <p>{content}</p>
-            </div>
-          </section>
-        </article>
-        </Body>
-        <Nav />
-     </BodyWrapper>
+            <article>
+              <section>
+                <h4>${userName}님의 리뷰</h4>
+                <div>
+                  <img src={`data:image/png;base64,${imageData}`} />
+                </div>
+              </section>
+              <section>
+                <h4>리뷰내용</h4>
+                <div className="review_content_wrapper">
+                  <p>{content}</p>
+                </div>
+              </section>
+            </article>
+          </Body>
+          <Nav />
+        </BodyWrapper>
       </Container>
-      </div>
-    );
-  };
+    </div>
+  );
+};
 
 export default ReviewReview;
