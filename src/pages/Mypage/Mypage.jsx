@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import Nav from "../../components/Nav";
+import MyBookmark from "./MyBookmark";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 const Container = styled.div`
   display: flex;
@@ -172,6 +174,7 @@ const Body = styled.div`
   gap: 20px;
   flex-shrink: 0;
   overflow-y: auto; /* 필요할 때만 스크롤이 나타나도록 설정합니다. */
+  overflow-x: hidden;
 `;
 const Iconbox = styled.div`
   display: flex;
@@ -248,6 +251,18 @@ const Separator2 = styled.div`
     background-color: ${(props) => (props.isSelected ? "#519a09" : "#c4c4c4")};
   }
 `;
+const ShowContents = styled.div`
+ width: 100%;
+`
+const ListDropDown = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 95%;
+  p{
+    margin: 0;
+  }
+`
+
 const Mypage = () => {
   const navigate = useNavigate();
 
@@ -341,6 +356,14 @@ const Mypage = () => {
     };
     input.click(); // 입력 요소 클릭 이벤트 실행
   };
+   const [isDropDown, setIsDropDown] = useState(true);
+  function handleDropDown() {
+    setIsDropDown(!isDropDown);
+  }
+  const [userBookmarkLength, getUserBookmarkLength] = useState(0)
+  const handleUserBookmarkLength = (isSearch) => {
+    getUserBookmarkLength(isSearch);
+  }
   
 
   return (
@@ -430,6 +453,11 @@ const Mypage = () => {
             <Separator1 isSelected={isReviewSelected} />
             <Separator2 isSelected={isBookmarkSelected} />
           </Iconbox>
+          <ListDropDown >
+            <p>{isReviewSelected ? "" : `즐겨찾기 ${userBookmarkLength}개`}</p>
+            <div onClick={handleDropDown}>{isDropDown ? <FaChevronDown/> : <FaChevronUp/>}</div>
+          </ListDropDown>
+          <ShowContents>{isBookmarkSelected ? <MyBookmark isDropDown={isDropDown} getUserBookmarkLength={handleUserBookmarkLength}/> : ""}</ShowContents>
         </Body>
       </BodyWrapper>
 
