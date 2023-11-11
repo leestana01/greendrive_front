@@ -271,8 +271,8 @@ const Mypage = () => {
   const [resLength, setLength] = useState(0);
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
   const [isOpen1, setIsOpen1] = useState(false);
-  const [isReviewSelected, setIsReviewSelected] = useState(false);
-  const [isBookmarkSelected, setIsBookmarkSelected] = useState(true);
+  const [isReviewSelected, setIsReviewSelected] = useState(true);
+  const [isBookmarkSelected, setIsBookmarkSelected] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const [isJudged, setIsJudged] = useState(localStorage.getItem("isJudged"));
