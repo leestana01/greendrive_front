@@ -270,8 +270,13 @@ const Mypage = () => {
   //reviewicon, bookmarkicon 선택시 색상 변화 함수
   const [isReviewSelected, setIsReviewSelected] = useState(false);
   const [isBookmarkSelected, setIsBookmarkSelected] = useState(true);
+  const [isCarRegistered, setIsCarRegistered] = useState(false);
 
   const SERVER = process.env.REACT_APP_SERVER;
+
+  const handleCarRegistrationStatus = (status) => {
+    setIsCarRegistered(status);
+  };
 
   const handleReviewIconClick = () => {
     setIsReviewSelected(true);
