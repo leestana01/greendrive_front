@@ -264,7 +264,7 @@ const ReviewHome = (props) => {
             <Reviewicon
               onClick={() => {
                 handleReviewIconClick();
-                setIsBookmarkSelected(true);
+                setIsBookmarkSelected(false);
               }}
             >
               <img
@@ -277,7 +277,7 @@ const ReviewHome = (props) => {
             <Bookmarkicon
               onClick={() => {
                 handleBookmarkIconClick();
-                setIsReviewSelected(true);
+                setIsReviewSelected(false);
               }}
             >
               <img
