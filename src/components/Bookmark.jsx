@@ -17,11 +17,12 @@ const BookmarkStyled = styled.div`
   
 `;
 const BookmarkElements = styled.div`
-  width: 42%;
+  min-width: 42%;
   min-height: 60px;
   text-align: left;
   border-radius: 10px;
   padding: 10px;
+  margin-right: 10px;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
   word-break: keep-all;
   cursor: pointer;
@@ -78,6 +79,9 @@ const Bookmark = ({isMapDetail, gotoBookmarkDetails}) => {
       }
     });
     console.log("Success delete bookmark", response.data);
+    const updatedItems = userBookmark.filter(item => item.id !== spaceId);
+    // 새로운 배열을 상태로 설정
+    setUserBookmark(updatedItems);
   } catch (error) {
     console.error("Error:", error.message);
   }
@@ -88,11 +92,13 @@ const Bookmark = ({isMapDetail, gotoBookmarkDetails}) => {
       <div>
           <BookmarkStyled className={isMapDetail ? "fadeOff" : ""}>
             {userBookmark.map((item, index) => (
-              <BookmarkElements onClick={gotoBookmarkDetails} key={index} >
+              <BookmarkElements key={index} >
                 <FaWindowClose size="15" color="red" onClick={() => deleteBookmark(item.id)} />
                 <FaBookmark size="15" color="green" />
-                <h5>{item.parkName}</h5>
-                <p>{item.address}</p>
+                <div onClick={gotoBookmarkDetails}>
+                  <h5>{item.parkName}</h5>
+                  <p>{item.address}</p>
+                </div>
               </BookmarkElements>
             ))}
             

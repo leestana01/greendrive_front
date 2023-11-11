@@ -12,7 +12,7 @@ const Container = styled.div`
   text-align: center;
   background-color: #ffffff;
   -ms-overflow-style: none;
-  z-index: 1;
+  z-index: 3;
   transition: width 0.3s ease;
   padding-top: 50px;
   padding-left: 5%;
@@ -20,7 +20,6 @@ const Container = styled.div`
   overflow: auto;
   width: 90%;
   height: 80%;
-  
 
   /* 미디어 쿼리 적용 */
   @media (hover: hover) {
@@ -56,6 +55,7 @@ const SearchListLi = styled.li`
   svg{
     float: right;
     cursor: pointer;
+    padding-right: 10px;
   }
 `
 
@@ -115,7 +115,7 @@ const SearchList = ({mark, searchPlace, isSearch}) => { //props를 둘 이상 �
         <SearchListUl>
         {searchArea.map((item, index) => (
           <SearchListLi onClick={gotoParkingDetails} key={index} >
-            <h4>주차장명: {item.parkName}<FaRegBookmark size="15" color="green" onClick={() => setBookmark(item.id)} /></h4>
+            <h4>주차장명: {item.parkName}<FaRegBookmark size="15" color="green"  onClick={() => setBookmark(item.id)} /></h4>
                 <p>도로명 주소: {item.address}</p>
               </SearchListLi>
           ))}
