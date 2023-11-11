@@ -310,19 +310,21 @@ const PreviewImage = styled.img`
 const Carregist = () => {
   const navigate = useNavigate();
 
-  const navigateToMain = () => {
-    navigate("/Main");
-  };
   const [name, setName] = useState("");
   const [drivingLicense, setDrivingLicense] = useState("");
   const [registrationLicense, setRegistrationLicense] = useState("");
-  const [registrationLicensePreview, setRegistrationLicensePreview] =
-    useState("");
+  const [registrationLicensePreview, setRegistrationLicensePreview] = useState("");
   const [drivingLicensePreview, setDrivingLicensePreview] = useState("");
 
   const [isOpen1, setIsOpen1] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInputFilled, setIsInputFilled] = useState(false);
+  
+  const [divs, setDivs] = useState([]);
+  const [failDivAdded, setFailDivAdded] = useState(false);
+
+  const SERVER = process.env.REACT_APP_SERVER;
+
   //등록하기 버튼 활성화 검사
   useEffect(() => {
     if (name && drivingLicense && registrationLicense) {
@@ -360,62 +362,23 @@ const Carregist = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-
-  const [divs, setDivs] = useState([]);
-  const [failDivAdded, setFailDivAdded] = useState(false);
-
-  const BACKEND_URL = "" || "";
-
   const handleModal = () => {
     setIsOpen1(true);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("handleSubmit called");
-
-    const drivingLicenseFile =
-      document.getElementById("drivingLicense")?.files[0];
-    const registrationCardFile = document.getElementById("registrationLicense")
-      ?.files[0];
-
-    if (!drivingLicenseFile || !registrationCardFile) {
-      console.error("Please upload both files.");
-      return;
-    }
-
+  const handleSubmit = async () => {
     const formData = new FormData();
-    formData.append("name", name);
-    formData.append("drivingLicense", drivingLicenseFile);
-    formData.append("registrationCard", registrationCardFile);
+    formData.append("userId", localStorage.getItem("userId"));
 
     try {
       const response = await axios.post(
-        `${BACKEND_URL}/register-car/`,
+        `${SERVER}/users/judge`,
         formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
       );
 
-      console.log("Registration successful:", response.data);
-      // Add any necessary logic here for a successful registration
+      console.log("성공적으로 등록되었습니다! : ", response.data);
     } catch (error) {
-      console.error("Registration failed:", error);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.non_field_errors
-      ) {
-        setError(error.response.data.non_field_errors[0]);
-      } else {
-        setError("An error occurred.");
-      }
+      console.error("등록 실패 : ", error);
 
       if (!failDivAdded) {
         const newFailDiv = (
@@ -563,7 +526,7 @@ const Carregist = () => {
                 </CmtxtBox>
 
                 <BtmBox>
-                  <Btmtext onClick={navigateToMain}>홈으로 이동</Btmtext>
+                  <Btmtext onClick={navigate("/Mypage")}>마이페이지로 이동</Btmtext>
                 </BtmBox>
               </ModalView>
             </ModalBackdrop1>
