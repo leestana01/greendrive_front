@@ -116,7 +116,7 @@ function App() {
                 path="/login/oauth2/callback/kakao"
                 element={<KakaoCode />}
               />
-              <Route path="/ReviewHome" element={<ReviewHome />} />
+              <Route path="/ReviewHome/:id" element={<ReviewHome />} />
               <Route path="/New" element={<ReviewNew />} />
               <Route path="/edit/:id" element={<ReviewEdit />} />
               <Route path="/review/:id" element={<ReviewReview />} />

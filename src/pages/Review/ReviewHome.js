@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ReviewStateContext } from "../../App";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
 import Nav from "../../components/Nav";
 import MyHeader from "../../components/Header";
@@ -150,6 +150,8 @@ const Icon = styled.img`
 `;
 
 const ReviewHome = (props) => {
+
+  const { id } = useParams();
   
   const navigate = useNavigate();
 
@@ -160,7 +162,7 @@ const ReviewHome = (props) => {
   const [error, setError] = useState(null);
   
   const [publicSpaceName, setPublicSpaceName] = useState('');
-  const [publicSpaceId, setPublicSpaceId] = useState("100-1-000004");
+  const [publicSpaceId, setPublicSpaceId] = useState(id);
   const [publicSpaceType, setPublicSpaceType] = useState('');
   const [publicSpaceTime, setPublicSpaceTime] = useState('');
   const [publicPhoneNumber, setPublicPhoneNumber] = useState('');
