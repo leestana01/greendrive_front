@@ -67,6 +67,7 @@ const SearchList = ({mark, searchPlace, isSearch}) => { //props를 둘 이상 �
   // const navigate = useNavigate();
   const [searchArea, setSearchArea] = useState([]);
   const [allLocation, setAllLocation] = useState([]);
+  const [userBookmark, setUserBookmark] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -118,6 +119,7 @@ const SearchList = ({mark, searchPlace, isSearch}) => { //props를 둘 이상 �
             "spaceId": `${spaceId}`
           }
         );
+        setUserBookmark(response);
         console.log("Success post bookmark"); 
       } catch (error) {
           console.error("Error:", error.message);

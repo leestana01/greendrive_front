@@ -77,7 +77,8 @@ const Bookmark = ({isMapDetail, gotoBookmarkDetails}) => {
         spaceId: spaceId
       }
     });
-    console.log("Success delete bookmark", response.data);
+    this.forceUpdate();
+    console.log("Success delete bookmark");
   } catch (error) {
     console.error("Error:", error.message);
   }

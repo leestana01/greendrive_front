@@ -117,7 +117,7 @@ function LandingPage() {
   const navigate = useNavigate();
   
   const gotoBookmarkDetails = () => {
-    navigate('/');
+    // navigate('/');
   }
   const gotoMapDetail = () => {
     setIsMapDetail(true);
@@ -196,6 +196,7 @@ function LandingPage() {
         
           gotoBookmarkDetails={gotoBookmarkDetails}
         />
+
         
         <div onClick={gotoMapDetail}
           style={{
