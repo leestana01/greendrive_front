@@ -233,7 +233,7 @@ const Findid = () => {
   const KAKAO_URI = process.env.REACT_APP_KAKAO_URI;
   const CLIENT = process.env.REACT_APP_CLIENT;
   const navigate = useNavigate();
-
+  const BACKEND_URL = SERVER;
   const navigateToLogin = () => {
     navigate("/Login");
   };
@@ -276,8 +276,6 @@ const Findid = () => {
   const [divs, setDivs] = useState([]);
   const [failDivAdded, setFailDivAdded] = useState(false);
 
-  const BACKEND_URL = "" || "";
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("handleSubmit called");
@@ -289,11 +287,11 @@ const Findid = () => {
 
     try {
       const response = await axios.post(
-        `${BACKEND_URL}/forgot-email/`,
+        `${BACKEND_URL}/users/forgot`,
         requestData
       );
       console.log("이메일(아이디) 찾음");
-      setEmail(response.data.email);
+      setEmail(response.data.userId);
       openModalHandler();
     } catch (error) {
       console.error("실패:", error);
