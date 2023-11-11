@@ -251,34 +251,15 @@ const Separator2 = styled.div`
 const Mypage = () => {
   const navigate = useNavigate();
 
-  const navigateToMain = () => {
-    navigate("/Main");
-  };
-
   const [name, setName] = useState("");
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
-  const [profileImage, setProfileImage] = useState(
-    localStorage.getItem("profileImage")
-  );
-
-  const [drivingLicense, setDrivingLicense] = useState("");
-  const [registrationLicense, setRegistrationLicense] = useState("");
-  const [registrationLicensePreview, setRegistrationLicensePreview] =
-    useState("");
-  const [drivingLicensePreview, setDrivingLicensePreview] = useState("");
   const [isOpen1, setIsOpen1] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isInputFilled, setIsInputFilled] = useState(false);
-  //reviewicon, bookmarkicon 선택시 색상 변화 함수
   const [isReviewSelected, setIsReviewSelected] = useState(false);
   const [isBookmarkSelected, setIsBookmarkSelected] = useState(true);
-  const [isCarRegistered, setIsCarRegistered] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
 
   const SERVER = process.env.REACT_APP_SERVER;
-
-  const handleCarRegistrationStatus = (status) => {
-    setIsCarRegistered(status);
-  };
 
   const handleReviewIconClick = () => {
     setIsReviewSelected(true);
@@ -290,22 +271,6 @@ const Mypage = () => {
   const handleLicenseBoxClick = () => {
     navigate("/Carregist");
   };
-  useEffect(() => {
-    // 로컬스토리지에서 userId 가져오기
-    const storedUserId = localStorage.getItem("userId");
-    if (storedUserId) {
-      setUserId(storedUserId);
-      console.log(userId);
-    }
-  }, []);
-
-  useEffect(() => {
-    // 로컬 스토리지에서 이미지 정보를 가져옵니다.
-    const storedImage = localStorage.getItem("profileImage");
-    if (storedImage) {
-      setSelectedImage(storedImage);
-    }
-  }, []);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -313,12 +278,9 @@ const Mypage = () => {
         await axios
           .get(`${SERVER}/users/info?userId=${userId}`)
           .then((response) => {
-            // 디버그용 출력문
             console.log("유저 정보 정상 호출:", response.data);
             setName(response.data.name);
-            setProfileImage(response.data.profileImage);
-
-            navigate("/Mypage");
+            setSelectedImage(response.data.profileImage);
           });
       } catch (error) {
         console.error("계정 정보를 불러올 수 없음:", error);
@@ -351,104 +313,35 @@ const Mypage = () => {
     };
   }, [isOpen1]);
 
-  // 모달 창을 열거나 닫기 위한 메소드
-  const openModalHandler = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-
-  const [divs, setDivs] = useState([]);
-  const [failDivAdded, setFailDivAdded] = useState(false);
-
-  const BACKEND_URL = "" || "";
-  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleCameraIconClick = () => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
-    input.onchange = (e) => {
+    input.onchange = async (e) => {
       const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result);
-
-        localStorage.setItem("profileImage", reader.result); //이미지 로컬스토리지에 저장
-      };
       if (file) {
-        reader.readAsDataURL(file);
+        const formData = new FormData();
+        formData.append('userId', userId)
+        formData.append('image', file);
+  
+        try {
+          console.log(file);
+          const response = await axios.patch(
+            `${SERVER}/users/profile-image`,
+            formData
+          )
+          setSelectedImage(response.data.profileImage)
+          console.log("전송 후 반환된 값 : ",response.data)
+        } catch (error) {
+          // 에러 로그 출력
+          console.error('Upload failed', error);
+        }
       }
     };
-    input.click();
+    input.click(); // 입력 요소 클릭 이벤트 실행
   };
-  const handleModal = () => {
-    setIsOpen1(true);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("handleSubmit called");
-
-    const drivingLicenseFile =
-      document.getElementById("drivingLicense")?.files[0];
-    const registrationCardFile = document.getElementById("registrationLicense")
-      ?.files[0];
-
-    if (!drivingLicenseFile || !registrationCardFile) {
-      console.error("Please upload both files.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("drivingLicense", drivingLicenseFile);
-    formData.append("registrationCard", registrationCardFile);
-
-    try {
-      const response = await axios.post(
-        `${BACKEND_URL}/register-car/`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      console.log("Registration successful:", response.data);
-      // Add any necessary logic here for a successful registration
-    } catch (error) {
-      console.error("Registration failed:", error);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.non_field_errors
-      ) {
-        setError(error.response.data.non_field_errors[0]);
-      } else {
-        setError("An error occurred.");
-      }
-
-      if (!failDivAdded) {
-        const newFailDiv = (
-          <div key={divs.length} className="failDiv" style={failStyle}>
-            등록에 실패했습니다. 다시 시도해주세요.
-          </div>
-        );
-        setDivs([...divs, newFailDiv]);
-        setFailDivAdded(true);
-      }
-    }
-  };
-
-  const failStyle = {
-    color: "red",
-    textAlign: "left",
-    margin: "0 auto",
-  };
+  
 
   return (
     <Container>
@@ -474,7 +367,7 @@ const Mypage = () => {
             </Topbar>
             <Profileicon>
               {selectedImage ? (
-                <ProfileImage src={selectedImage} alt="selected" />
+                <ProfileImage src={`data:image/png;base64,${selectedImage}`} alt="selected" />
               ) : (
                 <img
                   src={`${process.env.PUBLIC_URL}/images/profileicon.png`}
