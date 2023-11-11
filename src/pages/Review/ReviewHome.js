@@ -180,7 +180,7 @@ const ReviewHome = (props) => {
   const handleReviewIconClick = () => {
     setIsReviewSelected(true);
     setIsBookmarkSelected(false);
-    navigate("/ReviewShow");
+    navigate(`/ReviewShow/${id}`);
   };
 
   const handleBookmarkIconClick = () => {

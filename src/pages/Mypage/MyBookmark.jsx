@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   overflow: hidden;
@@ -62,6 +63,7 @@ const BACKEND_URL = axios.create({
 const MyBookmark = ({gotoBookmarkDetails, isDropDown, getUserBookmarkLength}) => {
     const [isLogin, setIsLogin] = useState(false);
     const [userBookmark, setUserBookmark] = useState([]);
+    const navigate = useNavigate();
 
   useEffect(() => {
     if (localStorage.getItem("userId")) {
@@ -84,12 +86,15 @@ const MyBookmark = ({gotoBookmarkDetails, isDropDown, getUserBookmarkLength}) =>
     }
   };
   
+  function gotoBookmarkDetails(id) {
+    navigate(`/ReviewHome/${id}`);
+  }
     
   return (
       <Container style={{height: isDropDown ? '400px' : '0'}}>
           <BookmarkStyled >
             {userBookmark.map((item, index) => (
-                <BookmarkElements onClick={gotoBookmarkDetails} key={index} >
+                <BookmarkElements onClick={() => gotoBookmarkDetails(item.id)} key={index} >
                 <ImgBox>
                   <IconImg src={`${process.env.PUBLIC_URL}/images/greenDrive_Icon.png`}
                     alt="logo_icon"/>
