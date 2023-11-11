@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FaHome, FaUserCircle } from "react-icons/fa";
 import { IoWalletOutline } from "react-icons/io5";
 import bwipjs from "bwip-js";
@@ -88,6 +88,7 @@ const NavBar = () => {
   const barcodeCanvasRef = useRef(null);
   const [barcodeText, setBarcodeText] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // 로컬 스토리지에서 username을 읽음 -> 바코드로 출력할 예정
@@ -117,8 +118,7 @@ const NavBar = () => {
 
   const handleHome = () => {
     console.log(localStorage.getItem("home"));
-    if (localStorage.getItem("home")==="false") {
-      localStorage.setItem("home", true);
+    if (location.pathname != "/LandingPage") {
       navigate("/LandingPage");
     }
     else

@@ -1,11 +1,10 @@
-
 import { useState, useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ReviewStateContext } from "../../App";
 import { getStringDate } from "../../util/date";
 import { emotionList } from "../../util/emotion";
-import MyHeader from "../../components/MyHeader"; 
-import MyButton from "../../components/MyButton"; 
+import MyHeader from "../../components/MyHeader";
+import MyButton from "../../components/MyButton";
 import styled from "styled-components";
 import Nav from "../../components/Nav";
 import { async } from "q";
@@ -67,11 +66,9 @@ const ReviewReview = () => {
   const [date, setDate] = useState();
   const SERVER = process.env.REACT_APP_SERVER;
 
-  const fetchData = async() => {
-    try{
-      await axios
-      .get(`${SERVER}/reviews/${id}`)
-      .then(response => {
+  const fetchData = async () => {
+    try {
+      await axios.get(`${SERVER}/reviews/${id}`).then((response) => {
         setData(response.data);
         setImageData(data.image.data);
         setContent(data.content);
@@ -79,10 +76,10 @@ const ReviewReview = () => {
         setDate(data.date);
         console.log(data);
       });
-    } catch (error){
+    } catch (error) {
       console.log(error);
     }
-  }
+  };
   fetchData();
 
     return (
@@ -121,8 +118,8 @@ const ReviewReview = () => {
         <Nav />
      </BodyWrapper>
       </Container>
-      </div>
-    );
-  };
+    </div>
+  );
+};
 
 export default ReviewReview;

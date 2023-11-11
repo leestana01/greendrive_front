@@ -1,11 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
 import { ReviewStateContext } from "../../App";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ReviewList from "../../components/ReviewList";
 import MyHeader from "../../components/Header";
 import Nav from "../../components/Nav";
 import axios from 'axios';
+import SpaceReview from "../Mypage/SpaceReview";
 
 
 const Container = styled.div`
@@ -140,30 +141,12 @@ const Separator2 = styled.div`
 `;
 
 const ReviewShow = (props) => {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const reviewList = useContext(ReviewStateContext);
   const [isReviewSelected, setIsReviewSelected] = useState(false);
   const [isBookmarkSelected, setIsBookmarkSelected] = useState(true);
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const [publicSpaceName, setPublicSpaceName] = useState('');
-  const [publicSpaceId, setPublicSpaceId] = useState("100-1-000004");
-  const [publicSpaceType, setPublicSpaceType] = useState('');
-  const [publicSpaceTime, setPublicSpaceTime] = useState('');
-  const [publicPhoneNumber, setPublicPhoneNumber] = useState('');
-  const [publicAddress, setPublicAddress] = useState('');
-  const [publicBasicTime, setPublicBasicTime] = useState('');
-  const [publicBasicCharge, setPublicBasicCharge] = useState('');
-  const [publicAddUnitTime, setPublicAddUnitTime] = useState('');
-  const [publicAddUnitCharge, setPublicAddUnitCharge] = useState('');
-  const [publicDayTicketTime, setPublicDayTicketTime] = useState('');
-  const [publicDayTicketCharge, setPublicDayTicketCharge] = useState('');
-  const [publicMonthTicketCharge, setPublicMonthTicketCharge] = useState('');
-  const [publicPlusInfo, setPublicPlusInfo] = useState('');
-
-  const PUBLIC_DATA_KEY = process.env.REACT_APP_PUBLIC_DATA_KEY;
 
   const handleReviewIconClick = () => {
     setIsReviewSelected(true);
@@ -175,33 +158,10 @@ const ReviewShow = (props) => {
     setIsBookmarkSelected(true);
     setIsReviewSelected(false);
 
-    navigate("/ReviewHome");
-  };
-  const handleLicenseBoxClick = () => {
-    navigate("/ReviewList");
+    navigate(`/ReviewHome/${id}`);
   };
 
   useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get('http://api.greendrive.kro.kr/reviews/user/testuser1', {
-          params: {
-            userId: 'testuser1',
-          },
-        });
-
-        // API 응답이 리뷰 배열을 포함한다고 가정합니다.
-        setData(response.data);
-
-        setLoading(false);
-      } catch (error) {
-        setError(error);
-        setLoading(false);
-      }
-    };
-
-    fetchReviews();
     setIsReviewSelected(true); // 수정된 부분 (리뷰 아이콘을 선택된 상태로 설정)
     setIsBookmarkSelected(false); //
   }, []); // 컴포넌트가 마운트될 때 한 번만 실행
@@ -249,7 +209,7 @@ const ReviewShow = (props) => {
 
 
             
-            <ReviewList reviewList={reviewList} />
+            <SpaceReview id={id}/>
           </Body>
           <Nav />
         </BodyWrapper>
