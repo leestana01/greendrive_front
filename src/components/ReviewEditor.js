@@ -13,6 +13,7 @@ const env = process.env;
 env.PUBLIC_URL = env.PUBLIC_URL || "";
 
 const ReviewEditor = ({ isEdit, originData }) => {
+
   const contentRef = useRef();
   const [content, setContent] = useState("");
   const [emotion, setEmotion] = useState(3);
@@ -38,13 +39,13 @@ const ReviewEditor = ({ isEdit, originData }) => {
       }
     }
 
-    navigate("/", { replace: true });
+    navigate("/ReviewShow", { replace: true });
   };
 
   const handleRemove = () => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
       onRemove(originData.id);
-      navigate("/", { replace: true });
+      navigate("/ReviewShow", { replace: true });
     }
   };
 

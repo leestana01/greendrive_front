@@ -1,9 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ReviewStateContext } from "../../App";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import ReviewList from "../../components/ReviewList";
 import MyHeader from "../../components/Header";
+import Nav from "../../components/Nav";
+import axios from 'axios';
+
 
 const Container = styled.div`
   display: flex;
@@ -43,32 +46,31 @@ const BodyWrapper = styled.div`
   overflow: hidden;
   width: 393px;
   height: 852px;
-  
 `;
 
-  const Logo = styled.h1`
-    color: #519A09;
-    font-family: 'Righteous', cursive;
-    font-size: 30px;
-    margin: 0;
-  `;
+const Logo = styled.h1`
+  color: #519A09;
+  font-family: 'Righteous', cursive;
+  font-size: 30px;
+  margin: 0;
+`;
 
-  const Title = styled.div`
-    width: 122px;
-    height: 70px;
-    left: 135px;
-    top: 110px;
-    bottom: 100px;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 235%;
-    display: flex;
-    align-items: center;
-    color: #000000;
-  `;
+const Title = styled.div`
+  width: 122px;
+  height: 70px;
+  left: 135px;
+  top: 110px;
+  bottom: 100px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 235%;
+  display: flex;
+  align-items: center;
+  color: #000000;
+`;
 
-  const Iconbox = styled.div`
+const Iconbox = styled.div`
   display: flex;
   gap: 130px;
   position: relative;
@@ -108,6 +110,7 @@ const Bookmarkicon = styled.div`
     }
   }
 `;
+
 const Separator1 = styled.div`
   position: absolute;
   bottom: 0;
@@ -137,21 +140,71 @@ const Separator2 = styled.div`
 `;
 
 const ReviewShow = (props) => {
-    const navigate = useNavigate();
-    const reviewList = useContext(ReviewStateContext);
-    const [isReviewSelected, setIsReviewSelected] = useState(true); // 기본 값으로 true 설정
-    const [isBookmarkSelected, setIsBookmarkSelected] = useState(false); // 기본 값으로 false 설정
-  
-    const handleReviewIconClick = () => {
-      setIsReviewSelected(true);
+  const navigate = useNavigate();
+  const reviewList = useContext(ReviewStateContext);
+  const [isReviewSelected, setIsReviewSelected] = useState(false);
+  const [isBookmarkSelected, setIsBookmarkSelected] = useState(true);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const [publicSpaceName, setPublicSpaceName] = useState('');
+  const [publicSpaceId, setPublicSpaceId] = useState("100-1-000004");
+  const [publicSpaceType, setPublicSpaceType] = useState('');
+  const [publicSpaceTime, setPublicSpaceTime] = useState('');
+  const [publicPhoneNumber, setPublicPhoneNumber] = useState('');
+  const [publicAddress, setPublicAddress] = useState('');
+  const [publicBasicTime, setPublicBasicTime] = useState('');
+  const [publicBasicCharge, setPublicBasicCharge] = useState('');
+  const [publicAddUnitTime, setPublicAddUnitTime] = useState('');
+  const [publicAddUnitCharge, setPublicAddUnitCharge] = useState('');
+  const [publicDayTicketTime, setPublicDayTicketTime] = useState('');
+  const [publicDayTicketCharge, setPublicDayTicketCharge] = useState('');
+  const [publicMonthTicketCharge, setPublicMonthTicketCharge] = useState('');
+  const [publicPlusInfo, setPublicPlusInfo] = useState('');
+
+  const PUBLIC_DATA_KEY = process.env.REACT_APP_PUBLIC_DATA_KEY;
+
+  const handleReviewIconClick = () => {
+    setIsReviewSelected(true);
+    setIsBookmarkSelected(false);
+    navigate("/ReviewShow");
+  };
+
+  const handleBookmarkIconClick = () => {
+    setIsBookmarkSelected(true);
+    setIsReviewSelected(false);
+
+    navigate("/ReviewHome");
+  };
+  const handleLicenseBoxClick = () => {
+    navigate("/ReviewList");
+  };
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://api.greendrive.kro.kr/reviews/user/testuser1', {
+          params: {
+            userId: 'testuser1',
+          },
+        });
+
+        // API 응답이 리뷰 배열을 포함한다고 가정합니다.
+        setData(response.data);
+
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
     };
-  
-    const handleBookmarkIconClick = () => {
-      setIsBookmarkSelected(true);
-      setIsReviewSelected(false);
-      navigate("/ReviewHome");
-      
-    };
+
+    fetchReviews();
+    setIsReviewSelected(true); // 수정된 부분 (리뷰 아이콘을 선택된 상태로 설정)
+    setIsBookmarkSelected(false); //
+  }, []); // 컴포넌트가 마운트될 때 한 번만 실행
   return (
     <div>
       <Container>
@@ -160,41 +213,45 @@ const ReviewShow = (props) => {
             <MyHeader>
               <Logo>GreenDriver</Logo>
             </MyHeader>
-            <Title>제목불러오기</Title> 
+            <Title>{publicSpaceName}</Title>
 
             <Iconbox>
-            <Reviewicon
-              onClick={() => {
-                handleReviewIconClick();
-                setIsBookmarkSelected(false);
-              }}
-            >
-              <img
-                src={`${process.env.PUBLIC_URL}/images/reviewicon${
-                  isReviewSelected ? "_green" : ""
-                }.png`}
-                alt="reviewicon"
-              />
-            </Reviewicon>
-            <Bookmarkicon
-              onClick={() => {
-                handleBookmarkIconClick();
-                setIsReviewSelected(false);
-              }}
-            >
-              <img
-                src={`${process.env.PUBLIC_URL}/images/bookmarkicon${
-                  isBookmarkSelected ? "_green" : ""
-                }.png`}
-                alt="bookmarkicon"
-              />
-            </Bookmarkicon>
-            <Separator1 isSelected={isReviewSelected} />
-            <Separator2 isSelected={isBookmarkSelected} />
-          </Iconbox>
-            <ReviewList reviewList={reviewList} />
+              <Reviewicon
+                onClick={() => {
+                  handleReviewIconClick();
+                  setIsBookmarkSelected(false);
+                  
+                }}
+              >
+                <img
+                  src={`${process.env.PUBLIC_URL}/images/reviewicon${
+                    isReviewSelected ? "_green" : ""
+                  }.png`}
+                  alt="reviewicon"
+                />
+              </Reviewicon>
+              <Bookmarkicon
+                onClick={() => {
+                  handleBookmarkIconClick();
+                  setIsReviewSelected(false);
+                }}
+              >
+                <img
+                  src={`${process.env.PUBLIC_URL}/images/bookmarkicon${
+                    isBookmarkSelected ? "_green" : ""
+                  }.png`}
+                  alt="bookmarkicon"
+                />
+              </Bookmarkicon>
+              <Separator1 isSelected={isReviewSelected} />
+              <Separator2 isSelected={isBookmarkSelected} />
+            </Iconbox>
 
+
+            
+            <ReviewList reviewList={reviewList} />
           </Body>
+          <Nav />
         </BodyWrapper>
       </Container>
     </div>
