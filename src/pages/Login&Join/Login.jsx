@@ -252,15 +252,16 @@ const Login = () => {
     };
 
     try {
-      await axios.post(`${BACKEND_URL}/users/login`, userData)
-      .then(response => {
-        console.log("로그인성공:", response.data);
-        if (response.data.userId == null) {
-          throw new Error(response.data);
-        }
-        localStorage.setItem("userId", response.data.userId); // 수정된 부분
-        navigate("/Mypage");
-      })
+      await axios
+        .post(`${BACKEND_URL}/users/login`, userData)
+        .then((response) => {
+          console.log("로그인성공:", response.data);
+          if (response.data.userId == null) {
+            throw new Error(response.data);
+          }
+          localStorage.setItem("userId", response.data.userId); // 수정된 부분
+          navigate("/Mypage");
+        });
     } catch (error) {
       console.error("로그인 실패:", error);
 
