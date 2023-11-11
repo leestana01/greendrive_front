@@ -50,7 +50,7 @@ const InputForm = styled.form`
   align-items: center;
   justify-content: space-between;
   position: relative;
-  background-color: white;
+  // background-color: white;
   input{
     height: 30px;
     width: 80%;
@@ -115,6 +115,7 @@ function LandingPage() {
   };
   
   const navigate = useNavigate();
+  
   const gotoBookmarkDetails = () => {
     navigate('/');
   }

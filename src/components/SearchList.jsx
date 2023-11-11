@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { FaRegBookmark } from "react-icons/fa";
 
 const Container = styled.div`
   display: flex;
@@ -52,6 +53,10 @@ const SearchListLi = styled.li`
     background-color: #f5f5f5;
     cursor: pointer;
   }
+  svg{
+    float: right;
+    cursor: pointer;
+  }
 `
 
 const BACKEND_URL = axios.create({
@@ -68,10 +73,9 @@ const SearchList = ({mark, searchPlace, isSearch}) => { //props를 둘 이상 �
       const result = [];
         for (let i = 0; i < mark.length; i++) {
           const location = await getNearLocation(mark[i].id);
-          console.log("location:", location);
           result.push(location);
         }
-        console.log("result:", result);
+        console.log("Success get data");
         setAllLocation(prevSearchArea => [...prevSearchArea, ...result]);
       };
       fetchData();
@@ -103,17 +107,31 @@ const SearchList = ({mark, searchPlace, isSearch}) => { //props를 둘 이상 �
     }
   }
   function gotoParkingDetails() {
-    console.log(searchArea);
+    // console.log(searchArea);
   }
+  //즐겨찾기 추가
+  const setBookmark = async (spaceId) => {
+      try {
+        const response = await BACKEND_URL.post('/users/favorites',
+          {
+            "userId": `${localStorage.getItem("userId")}`,
+            "spaceId": `${spaceId}`
+          }
+        );
+        console.log("Success post bookmark"); 
+      } catch (error) {
+          console.error("Error:", error.message);
+      }
+    };
 
   return (
     <Container className={isSearch ? "fadeOn" : "fadeOff"}>
       
         <h2>{searchPlace} 근처 주차장</h2>
         <SearchListUl>
-          {searchArea.map((item, index) => (
-              <SearchListLi onClick={gotoParkingDetails} key={index} >
-                <h4>주차장명: {item.parkName}</h4>
+        {searchArea.map((item, index) => (
+          <SearchListLi onClick={gotoParkingDetails} key={index} >
+            <h4>주차장명: {item.parkName}<FaRegBookmark size="15" color="green" onClick={() => setBookmark(item.id)} /></h4>
                 <p>도로명 주소: {item.address}</p>
               </SearchListLi>
           ))}
