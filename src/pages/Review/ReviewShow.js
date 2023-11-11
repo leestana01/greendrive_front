@@ -138,10 +138,9 @@ const Separator2 = styled.div`
 
 const ReviewShow = (props) => {
     const navigate = useNavigate();
-  
     const reviewList = useContext(ReviewStateContext);
-    const [isReviewSelected, setIsReviewSelected] = useState(false);
-    const [isBookmarkSelected, setIsBookmarkSelected] = useState(true);
+    const [isReviewSelected, setIsReviewSelected] = useState(true); // 기본 값으로 true 설정
+    const [isBookmarkSelected, setIsBookmarkSelected] = useState(false); // 기본 값으로 false 설정
   
     const handleReviewIconClick = () => {
       setIsReviewSelected(true);
@@ -149,6 +148,9 @@ const ReviewShow = (props) => {
   
     const handleBookmarkIconClick = () => {
       setIsBookmarkSelected(true);
+      setIsReviewSelected(false);
+      navigate("/ReviewHome");
+      
     };
   return (
     <div>
@@ -190,7 +192,6 @@ const ReviewShow = (props) => {
             <Separator1 isSelected={isReviewSelected} />
             <Separator2 isSelected={isBookmarkSelected} />
           </Iconbox>
-            {/* Render the ReviewList component and pass reviewList as a prop */}
             <ReviewList reviewList={reviewList} />
 
           </Body>
