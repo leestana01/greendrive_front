@@ -66,46 +66,30 @@ const BACKEND_URL = axios.create({
 const SearchList = ({mark, searchPlace, isSearch}) => { //props를 둘 이상 받을 때는 중괄호로 묶기{}
   // const navigate = useNavigate();
   const [searchArea, setSearchArea] = useState([]);
-  const [allLocation, setAllLocation] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = [];
-        for (let i = 0; i < mark.length; i++) {
-          const location = await getNearLocation(mark[i].id);
-          result.push(location);
-        }
-        console.log("Success get data");
-        setAllLocation(prevSearchArea => [...prevSearchArea, ...result]);
-      };
-      fetchData();
-  }, [mark]);
 
   useEffect(() => {
     setSearchArea(prevSearchArea => []);
-    handleSearchArea(searchPlace);
+    if (searchPlace) {
+      handleSearchArea(searchPlace);
+    }
   }, [searchPlace]);
   
 
-  const getNearLocation = async (id) => {
+  const getNearLocation = async (search) => {
         try {
-          const response = await BACKEND_URL.get(`/spaces/${id}`);
-            const items = response.data;
-            return items;
+          const response = await BACKEND_URL.get(`/spaces/search?keyword=${search}`);
+          const items = response.data;
+          setSearchArea(items);
         } catch (error) {
             console.error("Error:", error.message);
         }
-    };
-
-  function handleSearchArea(near) {
-    if (allLocation !== null && searchPlace !== "") { 
-      for (let i = 0; i < allLocation.length; i++) {
-        if (allLocation[i].address.includes(near)) {
-          setSearchArea(prevSearchArea => [...prevSearchArea, allLocation[i]]);
-        }
-      }
-    }
+  };
+  function handleSearchArea(searchPlace) {
+    getNearLocation(searchPlace);
+    console.log(searchArea);
   }
+
   function gotoParkingDetails() {
     // console.log(searchArea);
   }

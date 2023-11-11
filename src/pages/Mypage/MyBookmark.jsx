@@ -5,13 +5,8 @@ import styled from "styled-components";
 const Container = styled.div`
   overflow: hidden;
   transition: height 0.3s ease;
-  .fade-in {
-    height: 200px;
-  }
-  .fade-out {
-    height: 0px;
-  }
-`;
+
+`
 const BookmarkStyled = styled.ul`
   margin: 10px auto;
   margin-bottom: 0;
@@ -44,32 +39,29 @@ const BookmarkElements = styled.li`
   }
 `;
 const ImgBox = styled.div`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: lightgray;
-  float: left;
-  margin-right: 10px;
-  user-select: none;
-`;
-const UserProfileImg = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`;
+    width: 50px;
+    height: 50px; 
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: lightgray;
+    float: left;
+    margin-right: 10px;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
+const IconImg = styled.img`
+width: 70%;
+`
 
 const BACKEND_URL = axios.create({
   baseURL: process.env.REACT_APP_SERVER, //백엔드 서버 주소
 });
 
-const My_bookmark = ({
-  gotoBookmarkDetails,
-  isDropDown,
-  getUserBookmarkLength,
-}) => {
-  const [isLogin, setIsLogin] = useState(false);
-  const [userBookmark, setUserBookmark] = useState([]);
+const MyBookmark = ({gotoBookmarkDetails, isDropDown, getUserBookmarkLength}) => {
+    const [isLogin, setIsLogin] = useState(false);
+    const [userBookmark, setUserBookmark] = useState([]);
 
   useEffect(() => {
     if (localStorage.getItem("userId")) {
@@ -91,22 +83,24 @@ const My_bookmark = ({
       console.error("Error:", error.message);
     }
   };
-
+  
+    
   return (
-    <Container style={{ height: isDropDown ? "200px" : "0" }}>
-      <BookmarkStyled>
-        {userBookmark.map((item, index) => (
-          <BookmarkElements onClick={gotoBookmarkDetails} key={index}>
-            <ImgBox>
-              <UserProfileImg />
-            </ImgBox>
-            <h5>{item.parkName}</h5>
-            <p>{item.address}</p>
-          </BookmarkElements>
-        ))}
-      </BookmarkStyled>
-    </Container>
-  );
-};
+      <Container style={{height: isDropDown ? '400px' : '0'}}>
+          <BookmarkStyled >
+            {userBookmark.map((item, index) => (
+                <BookmarkElements onClick={gotoBookmarkDetails} key={index} >
+                <ImgBox>
+                  <IconImg src={`${process.env.PUBLIC_URL}/images/greenDrive_Icon.png`}
+                    alt="logo_icon"/>
+                </ImgBox>
+                <h5>{item.parkName}</h5>
+                <p>{item.address}</p>
+              </BookmarkElements>
+            ))}
+            
+        </BookmarkStyled></Container>
+  )
+}
 
-export default My_bookmark;
+export default MyBookmark

@@ -4,6 +4,7 @@ import styled from "styled-components";
 import axios from "axios";
 import Nav from "../../components/Nav";
 import MyBookmark from "./MyBookmark";
+import MyReview from "./MyReview";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 const Container = styled.div`
@@ -393,7 +394,13 @@ const Mypage = () => {
   const [userBookmarkLength, getUserBookmarkLength] = useState(0);
   const handleUserBookmarkLength = (isSearch) => {
     getUserBookmarkLength(isSearch);
-  };
+  }
+  const [userReviewLength, getUserReviewLength] = useState(0);
+  const handleUserReviewLength = (isSearch) => {
+    getUserReviewLength(isSearch);
+  }
+  const [nowSelectedContents, setNowSelectedContents] = useState(0);
+  
 
   return (
     <Container>
@@ -456,6 +463,7 @@ const Mypage = () => {
               onClick={() => {
                 handleReviewIconClick();
                 setIsBookmarkSelected(false);
+                setNowSelectedContents(0);
               }}
             >
               <img
@@ -469,6 +477,7 @@ const Mypage = () => {
               onClick={() => {
                 handleBookmarkIconClick();
                 setIsReviewSelected(false);
+                setNowSelectedContents(1);
               }}
             >
               <img
@@ -481,22 +490,13 @@ const Mypage = () => {
             <Separator1 isSelected={isReviewSelected} />
             <Separator2 isSelected={isBookmarkSelected} />
           </Iconbox>
-          <ListDropDown>
-            <p>{isReviewSelected ? "" : `즐겨찾기 ${userBookmarkLength}개`}</p>
-            <div onClick={handleDropDown}>
-              {isDropDown ? <FaChevronDown /> : <FaChevronUp />}
-            </div>
+          <ListDropDown >
+            <p>{nowSelectedContents ? `즐겨찾기 ${userBookmarkLength}개`:`내가 쓴 리뷰 ${userReviewLength}개`}</p>
+            <div onClick={handleDropDown}>{isDropDown ? <FaChevronDown/> : <FaChevronUp/>}</div>
           </ListDropDown>
-          <ShowContents>
-            {isBookmarkSelected ? (
-              <MyBookmark
-                isDropDown={isDropDown}
-                getUserBookmarkLength={handleUserBookmarkLength}
-              />
-            ) : (
-              ""
-            )}
-          </ShowContents>
+          <ShowContents>{nowSelectedContents  ?
+            <MyBookmark isDropDown={isDropDown} getUserBookmarkLength={handleUserBookmarkLength} /> :
+            <MyReview isDropDown={isDropDown} getUserReviewLength={handleUserReviewLength} />}</ShowContents>
         </Body>
       </BodyWrapper>
 
