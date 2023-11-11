@@ -42,9 +42,8 @@ const ReviewElements = styled.li`
   }
 `;
 const ImgBox = styled.div`
-    width: 50px;
-    height: 50px; 
-    border-radius: 50%;
+    width: 130px;
+    height: 90px; 
     overflow: hidden;
     background-color: lightgreen;
     float: left;
@@ -53,6 +52,7 @@ const ImgBox = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 10px;
 `
 const ReviewImg = styled.img`
     width: 100%;
@@ -71,6 +71,16 @@ p{
 const BottomInfos = styled.div`
 display: flex;
 justify-content: space-between;
+p{
+  color: gray;
+}
+`
+const InfoDiv = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+height: 90px;
+
 `
 
 const BACKEND_URL = axios.create({
@@ -114,12 +124,14 @@ const MyReview = ({isDropDown, getUserReviewLength}) => {
                   <ReviewImg src={`data:image/png;base64,${item.image.data}`} /> :
                   <FaMap/>}
                 </ImgBox>
-                <h5>{item.content}</h5>
-                
-                <BottomInfos>
-                  <p>{item.date}</p>
-                  <Likes><FaHeart size="15" color="green"/><p>{item.likes}</p></Likes>
-                </BottomInfos>
+               <InfoDiv>
+                  <h5>{item.content}</h5>
+                  
+                  <BottomInfos>
+                    <p>{item.date}</p>
+                    <Likes><FaHeart size="15" color="green"/><p>{item.likes}</p></Likes>
+                  </BottomInfos>
+               </InfoDiv>
                 
               </ReviewElements>
             ))}
