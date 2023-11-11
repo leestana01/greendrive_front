@@ -1,11 +1,13 @@
-import React, { useContext, useState, useEffect } from "react";
+
+import { useState, useContext, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { ReviewStateContext } from "../../App";
+import { getStringDate } from "../../util/date";
+import { emotionList } from "../../util/emotion";
+import MyHeader from "../../components/MyHeader"; 
+import MyButton from "../../components/MyButton"; 
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import ReviewList from "../../components/ReviewList";
-import MyHeader from "../../components/Header";
 import Nav from "../../components/Nav";
-import axios from 'axios';
 
 const Container = styled.div`
   display: flex;
@@ -46,195 +48,111 @@ const BodyWrapper = styled.div`
   width: 393px;
   height: 852px;
 `;
-
-const Logo = styled.h1`
-  color: #519A09;
-  font-family: 'Righteous', cursive;
-  font-size: 30px;
-  margin: 0;
+const Greeting = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
 `;
 
-const Title = styled.div`
-  width: 122px;
-  height: 70px;
-  left: 135px;
-  top: 110px;
-  bottom: 100px;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 235%;
-  display: flex;
-  align-items: center;
-  color: #000000;
-`;
-
-const Iconbox = styled.div`
-  display: flex;
-  gap: 130px;
-  position: relative;
-`;
-
-const Reviewicon = styled.div`
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-  cursor: pointer;
-
-  img {
-    transition: filter 0.3s;
-  }
-
-  &:hover {
-    img {
-      filter: brightness(1.2);
-    }
-  }
-`;
-
-const Bookmarkicon = styled.div`
-  width: 40px;
-  height: 40px;
-  margin-top: -10px;
-  flex-shrink: 0;
-  cursor: pointer;
-
-  img {
-    transition: filter 0.3s;
-  }
-
-  &:hover {
-    img {
-      filter: brightness(1.2);
-    }
-  }
-`;
-
-const Separator1 = styled.div`
-  position: absolute;
-  bottom: 0;
-  height: 1px;
-  width: 100%;
-  left: -50%;
-  background-color: #c4c4c4;
-  transition: background-color 0.3s;
-
-  ${Iconbox}:hover & {
-    background-color: ${(props) => (props.isSelected ? "#519a09" : "#c4c4c4")};
-  }
-`;
-
-const Separator2 = styled.div`
-  position: absolute;
-  bottom: 0;
-  height: 1px;
-  width: 100%;
-  background-color: #c4c4c4;
-  left: 50%;
-  transition: background-color 0.3s;
-
-  ${Iconbox}:hover & {
-    background-color: ${(props) => (props.isSelected ? "#519a09" : "#c4c4c4")};
-  }
-`;
-
-const ReviewShow = (props) => {
-  const navigate = useNavigate();
+const ReviewReview = () => {
+  const { id } = useParams();
   const reviewList = useContext(ReviewStateContext);
-  const [isReviewSelected, setIsReviewSelected] = useState(false);
-  const [isBookmarkSelected, setIsBookmarkSelected] = useState(true);
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  
-  const [publicSpaceName, setPublicSpaceName] = useState('');
-  const [publicSpaceId, setPublicSpaceId] = useState("100-1-000004");
-
-
-  const PUBLIC_DATA_KEY = process.env.REACT_APP_PUBLIC_DATA_KEY;
-
-  const handleReviewIconClick = () => {
-    setIsReviewSelected(true);
-    setIsBookmarkSelected(false);
-    navigate("/ReviewShow");
-  };
-
-  const handleBookmarkIconClick = () => {
-    setIsBookmarkSelected(true);
-  };
-  const handleLicenseBoxClick = () => {
-    navigate("/ReviewList");
-  };
+  const navigate = useNavigate();
+  const [data, setData] = useState();
+  const [userName, setUserName] = useState(""); // Added state for the user's name
 
   useEffect(() => {
-    const fetchReviews = async () => {
+    // Simulating fetching user data based on the user ID
+    const fetchUserData = async () => {
       try {
-        setLoading(true);
-        const response = await axios.get('http://api.greendrive.kro.kr/reviews/user/testuser1', {
-          params: {
-            userId: 'testuser1',
-          },
-        });
-
-        // API 응답이 리뷰 배열을 포함한다고 가정
-        setData(response.data);
-
-        setLoading(false);
+        // Assuming you have an API endpoint to fetch user data
+        const response = await fetch(`http://api.example.com/users/${id}`);
+        const userData = await response.json();
+        setUserName(userData.name); // Assuming the user's name is in the fetched data
       } catch (error) {
-        setError(error);
-        setLoading(false);
+        console.error("Error fetching user data", error);
       }
     };
 
-    fetchReviews();
-  }, []); 
-  return (
-    <div>
-      <Container>
-        <BodyWrapper>
-          <Body>
-            <MyHeader>
-              <Logo>GreenDriver</Logo>
-            </MyHeader>
-            <Title>{publicSpaceName}</Title>
+    fetchUserData();
+  }, [id]);
+  useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `리뷰 - ${id}번 리뷰`;
+  }, []);
 
-            <Iconbox>
-              <Reviewicon
-                onClick={() => {
-                  handleReviewIconClick();
-                  setIsBookmarkSelected(false);
-                }}
-              >
-                <img
-                  src={`${process.env.PUBLIC_URL}/images/reviewicon${
-                    isReviewSelected ? "_green" : ""
-                  }.png`}
-                  alt="reviewicon"
-                />
-              </Reviewicon>
-              <Bookmarkicon
-                onClick={() => {
-                  handleBookmarkIconClick();
-                  setIsReviewSelected(false);
-                }}
-              >
-                <img
-                  src={`${process.env.PUBLIC_URL}/images/bookmarkicon${
-                    isBookmarkSelected ? "_green" : ""
-                  }.png`}
-                  alt="bookmarkicon"
-                />
-              </Bookmarkicon>
-              <Separator1 isSelected={isReviewSelected} />
-              <Separator2 isSelected={isBookmarkSelected} />
-            </Iconbox>
-            <ReviewList reviewList={reviewList} />
-          </Body>
-          <Nav />
-        </BodyWrapper>
+  useEffect(() => {
+    if (reviewList.length >= 1) {
+      const targetReview = reviewList.find(
+        (it) => parseInt(it.id) === parseInt(id)
+      );
+
+      if (targetReview) {
+
+        setData(targetReview);
+      } else {
+        alert("없는 리뷰입니다.");
+        navigate("/", { replace: true });
+      }
+    }
+  }, [id, reviewList]);
+
+  if (!data) {
+    return <div className="ReviewPage">로딩중입니다...</div>;
+  } else {
+    const curEmotionData = emotionList.find(
+      (it) => parseInt(it.emotion_id) === parseInt(data.emotion)
+    );
+    console.log(curEmotionData);
+
+    return (
+    
+      <div className="ReviewPage">
+          <Container>
+  <BodyWrapper>
+         <Body>
+          
+        <MyHeader
+          headText={`${getStringDate(new Date(data.date))} `}
+          leftChild={
+            <MyButton text={"< 뒤로가기"} onClick={() => navigate(-1)} />
+          }
+          rightChild={
+            <MyButton
+              text={"수정하기"}
+              onClick={() => navigate(`/edit/${data.id}`)}
+            />
+          }
+        />
+        <article>
+          <section>
+            <h4>${userName}님의 리뷰</h4>
+            <div
+              className={[
+                "review_img_wrapper",
+                `review_img_wrapper_${data.emotion}`,
+              ].join(" ")}
+            >
+              <img src={curEmotionData.emotion_img} />
+              <div className="emotion_descript">
+                {curEmotionData.emotion_descript}
+              </div>
+            </div>
+          </section>
+          <section>
+            <h4>리뷰내용</h4>
+            <div className="review_content_wrapper">
+              <p>{data.content}</p>
+            </div>
+          </section>
+        </article>
+        </Body>
+        <Nav />
+     </BodyWrapper>
       </Container>
-    </div>
-  );
+      </div>
+    );
+  }
 };
 
-export default ReviewShow;
+export default ReviewReview;
