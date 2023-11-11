@@ -260,7 +260,7 @@ const Login = () => {
             throw new Error(response.data);
           }
           localStorage.setItem("userId", response.data.userId); // 수정된 부분
-          navigate("/Mypage");
+          navigate("/landingpage");
         });
     } catch (error) {
       console.error("로그인 실패:", error);

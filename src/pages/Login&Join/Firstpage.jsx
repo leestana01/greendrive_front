@@ -125,6 +125,7 @@ const KakaoLogintext = styled.div`
 `;
 
 const Firstpage = () => {
+  localStorage.setItem("home",true)
   const navigate = useNavigate();
 
   const navigateToLogin = () => {

@@ -115,21 +115,20 @@ const NavBar = () => {
     }
   }, [barcodeText]);
 
-  function handleNavigate() {
-    // navigate("/LandingPage");
-    window.location.reload();
+  const handleHome = () => {
+    console.log(localStorage.getItem("home"));
+    if (localStorage.getItem("home")==="false") {
+      localStorage.setItem("home", true);
+      navigate("/LandingPage");
+    }
+    else
+      window.location.reload();
+  }
+  const handleMyPage = () => {
+    navigate("/MyPage");
+    localStorage.setItem("home", false);
   }
 
-  // const setIsMapDetail = () => {
-  //   getIsMapDetail(false);
-  // };
-  // const setIsSearch = () => {
-  //   getIsSearch(false);
-  // };
-//   const handleClick = () => {
-//     setIsMapDetail();
-//     setIsSearch();
-// };
 
   return (
     <NavigationBar>
@@ -144,11 +143,11 @@ const NavBar = () => {
 
       <BarcodeIcon size="60" onClick={() => setBarcodeOpen(!isBarcodeOpen)} />
       <NavItems>
-        <NavLink onClick={handleNavigate}>
+        <NavLink onClick={handleHome}>
         {/* <NavLink onClick={handleClick}> */}
           <FaHome size="40" color="green" />홈
         </NavLink>
-        <NavLink>
+        <NavLink onClick={handleMyPage}>
           <FaUserCircle size="40" color="green" />
           마이페이지
         </NavLink>
