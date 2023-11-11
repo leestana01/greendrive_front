@@ -252,27 +252,30 @@ const Separator2 = styled.div`
   }
 `;
 const ShowContents = styled.div`
- width: 100%;
-`
+  width: 100%;
+`;
 const ListDropDown = styled.div`
   display: flex;
   justify-content: space-between;
   width: 95%;
-  p{
+  p {
     margin: 0;
   }
-`
+`;
 
 const Mypage = () => {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
+  const [resLength, setLength] = useState(0);
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
   const [isOpen1, setIsOpen1] = useState(false);
   const [isReviewSelected, setIsReviewSelected] = useState(false);
   const [isBookmarkSelected, setIsBookmarkSelected] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
+  const [isJudged, setIsJudged] = useState(localStorage.getItem("isJudged"));
+  const [subMessage, setSubMessage] = useState("로딩 중 에러가 발생했습니다.");
 
   const SERVER = process.env.REACT_APP_SERVER;
 
@@ -286,17 +289,30 @@ const Mypage = () => {
   const handleLicenseBoxClick = () => {
     navigate("/Carregist");
   };
-
   useEffect(() => {
     const fetchToken = async () => {
       try {
         await axios
-          .get(`${SERVER}/users/info?userId=${userId}`)
-          .then((response) => {
-            console.log("유저 정보 정상 호출:", response.data);
-            setName(response.data.name);
-            setSelectedImage(response.data.profileImage);
-          });
+          //.get(`${SERVER}/users/info?userId=${userId}`)
+          .all([
+            axios.get(`${SERVER}/users/info?userId=${userId}`),
+            axios.get(`${SERVER}/subscriptions/${userId}`),
+          ])
+          .then(
+            axios.spread((response, res2) => {
+              setName(response.data.name);
+              setSelectedImage(response.data.profileImage);
+              setIsJudged(response.data.isJudged);
+              setLength(res2.data.length);
+
+              console.log("구독어쩌고 : ", res2.data.length);
+            })
+          );
+
+        // .then((response) => {
+        //   console.log("유저 정보 정상 호출:", response.data);
+
+        // });
       } catch (error) {
         console.error("계정 정보를 불러올 수 없음:", error);
       }
@@ -328,7 +344,6 @@ const Mypage = () => {
     };
   }, [isOpen1]);
 
-
   const handleCameraIconClick = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -337,34 +352,48 @@ const Mypage = () => {
       const file = e.target.files[0];
       if (file) {
         const formData = new FormData();
-        formData.append('userId', userId)
-        formData.append('image', file);
-  
+        formData.append("userId", userId);
+        formData.append("image", file);
+
         try {
           console.log(file);
           const response = await axios.patch(
             `${SERVER}/users/profile-image`,
             formData
-          )
-          setSelectedImage(response.data.profileImage)
-          console.log("전송 후 반환된 값 : ",response.data)
+          );
+          setSelectedImage(response.data.profileImage);
+          console.log("전송 후 반환된 값 : ", response.data);
         } catch (error) {
           // 에러 로그 출력
-          console.error('Upload failed', error);
+          console.error("Upload failed", error);
         }
       }
     };
     input.click(); // 입력 요소 클릭 이벤트 실행
   };
-   const [isDropDown, setIsDropDown] = useState(true);
+
+  useEffect(() => {
+    function changeMessage() {
+      switch (isJudged) {
+        case 1:
+          setSubMessage("구독 잔여 횟수 : " + resLength);
+        case 2:
+          setSubMessage("등록한 자동차 인증 진행중입니다");
+        default:
+          setSubMessage("구독이 필요합니다!");
+      }
+    }
+    changeMessage();
+  }, [isJudged]);
+
+  const [isDropDown, setIsDropDown] = useState(true);
   function handleDropDown() {
     setIsDropDown(!isDropDown);
   }
-  const [userBookmarkLength, getUserBookmarkLength] = useState(0)
+  const [userBookmarkLength, getUserBookmarkLength] = useState(0);
   const handleUserBookmarkLength = (isSearch) => {
     getUserBookmarkLength(isSearch);
-  }
-  
+  };
 
   return (
     <Container>
@@ -390,7 +419,10 @@ const Mypage = () => {
             </Topbar>
             <Profileicon>
               {selectedImage ? (
-                <ProfileImage src={`data:image/png;base64,${selectedImage}`} alt="selected" />
+                <ProfileImage
+                  src={`data:image/png;base64,${selectedImage}`}
+                  alt="selected"
+                />
               ) : (
                 <img
                   src={`${process.env.PUBLIC_URL}/images/profileicon.png`}
@@ -417,11 +449,7 @@ const Mypage = () => {
               <Username>{name}</Username>
               <Usertext>드라이버님</Usertext>
             </Namebox>
-            <Infotext>
-              구독권 이용을 원하신다면
-              <br />
-              친환경 자동차 인증이 필요해요!
-            </Infotext>
+            <Infotext>{subMessage}</Infotext>{" "}
           </Topbox>
           <Iconbox>
             <Reviewicon
@@ -453,11 +481,22 @@ const Mypage = () => {
             <Separator1 isSelected={isReviewSelected} />
             <Separator2 isSelected={isBookmarkSelected} />
           </Iconbox>
-          <ListDropDown >
+          <ListDropDown>
             <p>{isReviewSelected ? "" : `즐겨찾기 ${userBookmarkLength}개`}</p>
-            <div onClick={handleDropDown}>{isDropDown ? <FaChevronDown/> : <FaChevronUp/>}</div>
+            <div onClick={handleDropDown}>
+              {isDropDown ? <FaChevronDown /> : <FaChevronUp />}
+            </div>
           </ListDropDown>
-          <ShowContents>{isBookmarkSelected ? <MyBookmark isDropDown={isDropDown} getUserBookmarkLength={handleUserBookmarkLength}/> : ""}</ShowContents>
+          <ShowContents>
+            {isBookmarkSelected ? (
+              <MyBookmark
+                isDropDown={isDropDown}
+                getUserBookmarkLength={handleUserBookmarkLength}
+              />
+            ) : (
+              ""
+            )}
+          </ShowContents>
         </Body>
       </BodyWrapper>
 
