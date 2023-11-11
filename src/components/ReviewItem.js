@@ -27,11 +27,13 @@ const ReviewItem = ({ id, emotion, content, date }) => {
           `emotion_img_wrapper_${emotion}`,
         ].join(" ")}
       >
-        <img src={process.env.PUBLIC_URL + `assets/emotion${emotion}.png`} />
+        <img src={process.env.PUBLIC_URL + `assets/emotion${emotion}.png`} alt={`emotion-${emotion}`} />
       </div>
       <div onClick={goDetail} className="info_wrapper">
         <div className="review_date">{strDate}</div>
-        <div className="review_content_preview">{content.slice(0, 25)}</div>
+        <div className="review_content_preview">
+          {content ? content.slice(0, 25) : ""} {/* content가 정의되어 있을 때에만 slice 메서드 사용 */}
+        </div>
       </div>
       <div className="btn_wrapper">
         <MyButton onClick={goEdit} text={"수정하기"} />

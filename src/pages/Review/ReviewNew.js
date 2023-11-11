@@ -5,6 +5,7 @@ import styled from "styled-components";
 import MyHeader from "../../components/Header";
 import HeaderMenu from "../../components/HeaderMenu";
 import { Navigate } from 'react-router-dom';
+import Nav from "../../components/Nav";
 
 const BASE_URL = 'http://api.greendrive.kro.kr';
 
@@ -114,7 +115,9 @@ const BodyWrapper = styled.div`
  
             {props.children}
             <ReviewEditor onSubmit={handleReviewSubmit} />
+          
           </Body>
+          <Nav/>
         </BodyWrapper>
       </Container>
     </div>

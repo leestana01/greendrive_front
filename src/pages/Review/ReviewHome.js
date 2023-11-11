@@ -3,6 +3,7 @@ import { ReviewStateContext } from "../../App";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import Nav from "../../components/Nav";
 
 import MyHeader from "../../components/Header";
 
@@ -150,6 +151,7 @@ const Icon = styled.img`
 `;
 
 const ReviewHome = (props) => {
+  
   const navigate = useNavigate();
 
   const [isReviewSelected, setIsReviewSelected] = useState(false);
@@ -177,6 +179,8 @@ const ReviewHome = (props) => {
 
   const handleReviewIconClick = () => {
     setIsReviewSelected(true);
+    setIsBookmarkSelected(false);
+    navigate("/ReviewShow");
   };
 
   const handleBookmarkIconClick = () => {
@@ -288,37 +292,38 @@ const ReviewHome = (props) => {
             <Separator2 isSelected={isBookmarkSelected} />
           </Iconbox>
           <IconWrapper>
-  {/* Add your address icon image source here */}
+
   <Icon src={`${process.env.PUBLIC_URL}/images/icon_marker.png`} alt="icon_marker" />
   <p>주소 : {publicAddress}</p>
 </IconWrapper>
 
 <IconWrapper>
-  {/* Add your time icon image source here */}
+
   <Icon src={`${process.env.PUBLIC_URL}/images/icon_clock.png`} alt="icon_clock" />
   <p>시간 : {publicSpaceTime}</p>
 </IconWrapper>
 
 <IconWrapper>
-  {/* Add your phone icon image source here */}
+
   <Icon src={`${process.env.PUBLIC_URL}/images/icon_phone.png`} alt="icon_phone" />
   <p>전화번호 : {publicPhoneNumber}</p>
 </IconWrapper>
 
 <IconWrapper>
-  {/* Add your fee icon image source here */}
+
   <Icon src={`${process.env.PUBLIC_URL}/images/icon_coin.png`} alt="icon_coin" />
   <p>요금: {publicBasicCharge}</p>
 </IconWrapper>
 
 <IconWrapper>
-  {/* Add your special info icon image source here */}
+
   <Icon src={`${process.env.PUBLIC_URL}/images/icon_globe.png`} alt="icon_globe" />
   <p>특이사항 : {publicPlusInfo}</p>
 </IconWrapper>
 
-
+         
           </Body>
+          <Nav/>
         </BodyWrapper>
       </Container>
     </div>
