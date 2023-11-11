@@ -1,11 +1,11 @@
-import { useState, useRef, useContext, useEffect, useCallback } from "react";
+import React, { useState, useRef, useContext, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { ReviewDispatchContext } from "./../App.js";
-
+import { useDropzone } from 'react-dropzone';
 import MyHeader from "./MyHeader";
 import MyButton from "./MyButton";
 import EmotionItem from "./EmotionItem";
-
+import Dropzone from 'react-dropzone'; // Updated import
 import { getStringDate } from "../util/date.js";
 import { emotionList } from "../util/emotion.js";
 
@@ -17,6 +17,7 @@ const ReviewEditor = ({ isEdit, originData }) => {
   const [content, setContent] = useState("");
   const [emotion, setEmotion] = useState(3);
   const [date, setDate] = useState(getStringDate(new Date()));
+  const [selectedFile, setSelectedFile] = useState(null); // setSelectedFile 추가
 
   const { onCreate, onEdit, onRemove } = useContext(ReviewDispatchContext);
   const handleClickEmote = useCallback((emotion) => {
@@ -29,15 +30,11 @@ const ReviewEditor = ({ isEdit, originData }) => {
       contentRef.current.focus();
       return;
     }
-    if (
-      window.confirm(
-        isEdit ? "리뷰를 수정하시겠습니까?" : "새로운 리뷰를 작성하시겠습니까?"
-      )
-    ) {
+    if (window.confirm(isEdit ? "리뷰를 수정하시겠습니까?" : "새로운 리뷰를 작성하시겠습니까?")) {
       if (!isEdit) {
-        onCreate(date, content, emotion);
+        onCreate(date, content, emotion, selectedFile);
       } else {
-        onEdit(originData.id, date, content, emotion);
+        onEdit(originData.id, date, content, emotion, selectedFile);
       }
     }
 
@@ -64,7 +61,7 @@ const ReviewEditor = ({ isEdit, originData }) => {
       <MyHeader
         headText={isEdit ? "리뷰 수정하기" : "새 리뷰 작성하기"}
         leftChild={
-          <MyButton text={"<뒤로가기 "} onClick={() => navigate(-1)} />
+          <MyButton text={"< "} onClick={() => navigate(-1)} />
         }
         rightChild={
           isEdit && (
@@ -110,6 +107,19 @@ const ReviewEditor = ({ isEdit, originData }) => {
               value={content}
               onChange={(e) => setContent(e.target.value)}
             />
+          </div>
+        </section>
+        <section>
+          <h4>파일 첨부</h4>
+          <div className="input_box">
+            <Dropzone onDrop={(acceptedFiles) => setSelectedFile(acceptedFiles[0])}>
+              {({ getRootProps, getInputProps }) => (
+                <div {...getRootProps()} className="dropzone">
+                  <input {...getInputProps()} />
+                  <p>Drag 'n' drop a file here, or click to select a file</p>
+                </div>
+              )}
+            </Dropzone>
           </div>
         </section>
         <section>

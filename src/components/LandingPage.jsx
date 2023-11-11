@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { FaSearch, FaRegBookmark } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 // import Kakao from "../Kakao";
@@ -8,6 +8,7 @@ import Kakao from "../Kakao_test";
 import Nav from "./Nav";
 import Header from "./Header";
 import Bookmark from "./Bookmark";
+import SearchList from "./SearchList";
 
 //css
 const Container = styled.div`
@@ -66,32 +67,6 @@ const InputForm = styled.form`
     right: 30px;
   }
 `;
-const BookmarkStyled = styled.div`
-  margin: 20px auto;
-  display: flex;
-  justify-content: space-between;
-`;
-const BookmarkElements = styled.div`
-  width: 42%;
-  height: 60px;
-  text-align: left;
-  border-radius: 10px;
-  padding: 10px;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
-  word-break: keep-all;
-  cursor: pointer;
-  svg{
-    float: right;
-  }
-  h5{
-    padding-top: 15px;
-    margin: 0;
-  }
-  p{
-    margin: 0;
-    font-size: 10px;
-  }
-`;
 const Logo = styled.div`
   border-radius: 50%;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
@@ -105,7 +80,7 @@ const Logo = styled.div`
 `;
 
 const BACKEND_URL = axios.create({
-    baseURL: "http://api.greendrive.kro.kr/spaces", //백엔드 서버 주소
+    baseURL: process.env.REACT_APP_SERVER, //백엔드 서버 주소
 });
   
 // function
@@ -120,7 +95,7 @@ function LandingPage() {
   //데이터 불러오기
   const initBookmark = async (data) => {
     try {
-      const response = await BACKEND_URL.get(`${data}`);
+      const response = await BACKEND_URL.get(`/spaces${data}`);
       const items = response.data;
       setMark(items);
       // console.log(items);
@@ -181,7 +156,9 @@ function LandingPage() {
         <div style={{
           position: isMapDetail ? 'absolute' : 'static',
           zIndex: 1,
-          width: '100%' }}>
+          width: '100%'
+        }}>
+          <SearchList mark={mark} searchPlace={ Place} />
           <InputForm onSubmit={handleSubmit}
             style={{
               justifyContent: isMapDetail ? 'space-evenly' : 'space-between',
@@ -209,15 +186,6 @@ function LandingPage() {
             ><FaSearch size={isMapDetail ? "25":"30"} color="green" /></button>
           </InputForm>
         </div>
-        {/* <Bookmark className={isMapDetail ? "fadeOff" : ""}>
-            {bookmarkList.map((item, index) => (
-              <BookmarkElements onClick={gotoBookmarkDetails} key={index} >
-                <FaRegBookmark size="15" color="green" />
-                <h5>{item.parkName}</h5>
-                <p>{item.address}</p>
-              </BookmarkElements>
-            ))}
-        </Bookmark> */}
         <Bookmark isMapDetail={isMapDetail} bookmarkList={bookmarkList}
           gotoBookmarkDetails={gotoBookmarkDetails}
         />
