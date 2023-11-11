@@ -49,11 +49,12 @@ const ImgBox = styled.div`
     float: left;
     margin-right: 10px;
     user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `
-const UserProfileImg = styled.img`
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+const IconImg = styled.img`
+width: 70%;
 `
 
 const BACKEND_URL = axios.create({
@@ -90,7 +91,8 @@ const MyBookmark = ({gotoBookmarkDetails, isDropDown, getUserBookmarkLength}) =>
             {userBookmark.map((item, index) => (
                 <BookmarkElements onClick={gotoBookmarkDetails} key={index} >
                 <ImgBox>
-                    <UserProfileImg/>
+                  <IconImg src={`${process.env.PUBLIC_URL}/images/greenDrive_Icon.png`}
+                    alt="logo_icon"/>
                 </ImgBox>
                 <h5>{item.parkName}</h5>
                 <p>{item.address}</p>
