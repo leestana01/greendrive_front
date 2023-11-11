@@ -3,14 +3,8 @@ import axios from 'axios';
 import styled from 'styled-components';
 
 const Container = styled.div`
-overflow: hidden;
-transition: height 0.3s ease;
-.fade-in{
-  height: 200px;
-}
-.fade-out{
-  height: 0px;
-}
+  overflow: hidden;
+  transition: height 0.3s ease;
 
 `
 const BookmarkStyled = styled.ul`
@@ -66,7 +60,7 @@ const BACKEND_URL = axios.create({
     baseURL: process.env.REACT_APP_SERVER, //백엔드 서버 주소
 });
 
-const My_bookmark = ({gotoBookmarkDetails, isDropDown, getUserBookmarkLength}) => {
+const MyBookmark = ({gotoBookmarkDetails, isDropDown, getUserBookmarkLength}) => {
     const [isLogin, setIsLogin] = useState(false);
     const [userBookmark, setUserBookmark] = useState([]);
 
@@ -91,7 +85,7 @@ const My_bookmark = ({gotoBookmarkDetails, isDropDown, getUserBookmarkLength}) =
   
     
   return (
-      <Container style={{height: isDropDown ? '200px' : '0'}}>
+      <Container style={{height: isDropDown ? '400px' : '0'}}>
           <BookmarkStyled >
             {userBookmark.map((item, index) => (
                 <BookmarkElements onClick={gotoBookmarkDetails} key={index} >
@@ -107,4 +101,4 @@ const My_bookmark = ({gotoBookmarkDetails, isDropDown, getUserBookmarkLength}) =
   )
 }
 
-export default My_bookmark
+export default MyBookmark
