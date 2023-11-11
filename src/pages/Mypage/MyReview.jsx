@@ -2,6 +2,7 @@ import React,{useState, useEffect} from 'react'
 import axios from 'axios';
 import styled from 'styled-components';
 import { FaHeart, FaMap } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   overflow: hidden;
@@ -93,6 +94,7 @@ const BACKEND_URL = axios.create({
 const MyReview = ({isDropDown, getUserReviewLength}) => {
     const [isLogin, setIsLogin] = useState(false);
     const [userReview, setUserReview] = useState([]);
+    const navigate = useNavigate();
 
   useEffect(() => {
     if (localStorage.getItem('userId')) {
@@ -112,8 +114,8 @@ const MyReview = ({isDropDown, getUserReviewLength}) => {
             console.error("Error:", error.message);
         }
   };
-  function gotoBookmarkDetails() {
-    // navigate("/bookmarkDetails");
+  function gotoBookmarkDetails(id) {
+    navigate(`/review/${id}`);
   }
   
     
@@ -121,7 +123,7 @@ const MyReview = ({isDropDown, getUserReviewLength}) => {
       <Container style={{height: isDropDown ? '400px' : '0'}}>
           <ReviewStyled >
             {userReview.map((item, index) => (
-                <ReviewElements onClick={gotoBookmarkDetails} key={index} >
+                <ReviewElements onClick={() => gotoBookmarkDetails(item.id)} key={index} >
                 <ImgBox>
                   {item.image.data !== "" ?
                     <ReviewImg src={`data:image/png;base64,${item.image.data}`} /> :
