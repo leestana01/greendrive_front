@@ -305,7 +305,7 @@ const Mypage = () => {
               setSelectedImage(response.data.profileImage);
               setIsJudged(response.data.isJudged);
               setLength(res2.data.length);
-
+              console.log(isJudged);
               console.log("구독어쩌고 : ", res2.data.length);
             })
           );
@@ -378,8 +378,10 @@ const Mypage = () => {
       switch (isJudged) {
         case 1:
           setSubMessage("구독 잔여 횟수 : " + resLength);
+          break;
         case 2:
           setSubMessage("등록한 자동차 인증 진행중입니다");
+          break;
         default:
           setSubMessage("구독이 필요합니다!");
       }
