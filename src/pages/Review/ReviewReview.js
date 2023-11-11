@@ -63,7 +63,8 @@ const ReviewReview = () => {
   const [data, setData] = useState();
   const [imageData, setImageData] = useState();
   const [content, setContent] = useState();
-  const [userName, setUserName] = useState(""); // Added state for the user's name
+  const [name, setName] = useState("");
+  const [date, setDate] = useState();
   const SERVER = process.env.REACT_APP_SERVER;
 
   const fetchData = async() => {
@@ -74,6 +75,8 @@ const ReviewReview = () => {
         setData(response.data);
         setImageData(data.image.data);
         setContent(data.content);
+        setName(data.name);
+        setDate(data.date);
         console.log(data);
       });
     } catch (error){
@@ -90,6 +93,7 @@ const ReviewReview = () => {
          <Body>
           
         <MyHeader
+          headText={date}
           leftChild={
             <MyButton text={"< 뒤로가기"} onClick={() => navigate(-1)} />
           }
@@ -101,7 +105,7 @@ const ReviewReview = () => {
         />
         <article>
           <section>
-            <h4>${userName}님의 리뷰</h4>
+            <h4>{name}님의 리뷰</h4>
             <div>
               <img src={`data:image/png;base64,${imageData}`} />
             </div>
