@@ -6,89 +6,119 @@ import axios from 'axios';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   position: absolute;
+  left: 0;
   text-align: center;
   background-color: #ffffff;
   -ms-overflow-style: none;
   z-index: 1;
   transition: width 0.3s ease;
   padding-top: 50px;
+  padding-left: 5%;
+  padding-right: 5%;
+  overflow: auto;
+  width: 90%;
+  height: 80%;
+  
 
   /* 미디어 쿼리 적용 */
   @media (hover: hover) {
-    width: 363px;
     margin: 0 auto;
   }
   .fadeOff{
     width: 0;
+  }
+  .fadeOn{
+    width: 80%;
   }
 
   &::-webkit-scrollbar {
     display: none;
   }
 `;
+const SearchListUl = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  height: 70%;
+  width: 100%;
+  overflow: scroll;
+`
+const SearchListLi = styled.li`
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  :hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+  }
+`
 
 const BACKEND_URL = axios.create({
     baseURL: process.env.REACT_APP_SERVER, //백엔드 서버 주소
 });
 
-const SearchList = (Mark, searchPlace) => {
+const SearchList = ({mark, searchPlace, isSearch}) => { //props를 둘 이상 받을 때는 중괄호로 묶기{}
   // const navigate = useNavigate();
   const [searchArea, setSearchArea] = useState([]);
-  const allLocation = [];
+  const [allLocation, setAllLocation] = useState([]);
 
   useEffect(() => {
-    console.log(Mark.Mark.length);
-    for (let i = 0; i < Mark.Mark.length; i++){
-      console.log(Mark.Mark[i].id);
-      handleAllLocation(Mark.Mark[i].id); 
-    }
-  }, []);
+    const fetchData = async () => {
+      const result = [];
+        for (let i = 0; i < mark.length; i++) {
+          const location = await getNearLocation(mark[i].id);
+          console.log("location:", location);
+          result.push(location);
+        }
+        console.log("result:", result);
+        setAllLocation(prevSearchArea => [...prevSearchArea, ...result]);
+      };
+      fetchData();
+  }, [mark]);
 
   useEffect(() => {
-    for (let i = 0; i < allLocation.length; i++) {
-      if (allLocation[i].address.includes(searchPlace)) {
-        handleSearchArea(allLocation[i]);
-      }
-    }
+    setSearchArea(prevSearchArea => []);
+    handleSearchArea(searchPlace);
   }, [searchPlace]);
   
 
   const getNearLocation = async (id) => {
         try {
           const response = await BACKEND_URL.get(`/spaces/${id}`);
-            return response.data;
+            const items = response.data;
+            return items;
         } catch (error) {
             console.error("Error:", error.message);
         }
     };
 
   function handleSearchArea(near) {
-    setSearchArea(prevSearchArea => [...prevSearchArea, near]);
-    console.log(searchArea);
+    if (allLocation !== null && searchPlace !== "") { 
+      for (let i = 0; i < allLocation.length; i++) {
+        if (allLocation[i].address.includes(near)) {
+          setSearchArea(prevSearchArea => [...prevSearchArea, allLocation[i]]);
+        }
+      }
+    }
   }
-  function handleAllLocation(location) {
-    allLocation.push(getNearLocation(location));
-  }
-
   function gotoParkingDetails() {
-    
+    console.log(searchArea);
   }
 
   return (
-    <Container>
-      <div>
-        <h1>Hello</h1>
-        <ul>
+    <Container className={isSearch ? "fadeOn" : "fadeOff"}>
+      
+        <h2>{searchPlace} 근처 주차장</h2>
+        <SearchListUl>
           {searchArea.map((item, index) => (
-              <li onClick={gotoParkingDetails} key={index} >
-                <h5>{item.parkName}</h5>
-                <p>{item.address}</p>
-              </li>
-            ))}
-        </ul>
-      </div>
+              <SearchListLi onClick={gotoParkingDetails} key={index} >
+                <h4>주차장명: {item.parkName}</h4>
+                <p>도로명 주소: {item.address}</p>
+              </SearchListLi>
+          ))}
+        </SearchListUl>
+      
     </Container>
   )
 }

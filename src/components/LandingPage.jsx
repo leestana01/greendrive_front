@@ -50,6 +50,7 @@ const InputForm = styled.form`
   align-items: center;
   justify-content: space-between;
   position: relative;
+  background-color: white;
   input{
     height: 30px;
     width: 80%;
@@ -92,6 +93,7 @@ function LandingPage() {
   const [dataType, setDataType] = useState(null);
   const [mark, setMark] = useState([]);
   const [isMapDetail, setIsMapDetail] = useState(false);
+  const [isSearch, setIsSearch] = useState(false);
 
   //데이터 불러오기
   const initBookmark = async (data) => {
@@ -99,7 +101,6 @@ function LandingPage() {
       const response = await BACKEND_URL.get(`/spaces${data}`);
       const items = response.data;
       setMark(items);
-      // console.log(items);
     } catch (error) {
       console.error("Error:", error.message);
     }
@@ -132,15 +133,19 @@ function LandingPage() {
       setDataType(1);
     }
     else {
-      initBookmark("");
+      // initBookmark("");
       setDataType(null);
       setPlace(InputText);
+      setIsSearch(true);
     }
     setInputText("");
   };
 
   const handleIsMapDetail = (isMapDetail) => {
     setIsMapDetail(isMapDetail);
+  }
+  const handleIsSearch = (isSearch) => {
+    setIsSearch(isSearch);
   }
 
 
@@ -158,7 +163,7 @@ function LandingPage() {
           zIndex: 1,
           width: '100%'
         }}>
-          <SearchList Mark={mark} searchPlace={"성남"} />
+          <SearchList mark={mark} searchPlace={Place} isSearch={isSearch}/>
           <InputForm onSubmit={handleSubmit}
             style={{
               justifyContent: isMapDetail ? 'space-evenly' : 'space-between',
@@ -203,7 +208,7 @@ function LandingPage() {
           />
         </div >
       </BodyWrapper>
-      <Nav getIsMapDetail={handleIsMapDetail} />
+      <Nav getIsMapDetail={handleIsMapDetail} getIsSearch={handleIsSearch} />
     </Container>
   );
 }

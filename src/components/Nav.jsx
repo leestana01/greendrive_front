@@ -15,7 +15,7 @@ const NavigationBar = styled.nav`
   align-items: center;
   position: relative;
   border-top: 4px solid #f5f5f5;
-  z-index: 0;
+  z-index: 5;
 `;
 
 const BarcodeContainer = styled.div`
@@ -82,7 +82,7 @@ const NavLink = styled.div`
   }
 `;
 
-const NavBar = ({ getIsMapDetail }) => {
+const NavBar = ({ getIsMapDetail, getIsSearch }) => {
   const [isBarcodeOpen, setBarcodeOpen] = useState(false);
   const barcodeCanvasRef = useRef(null);
   const [barcodeText, setBarcodeText] = useState("");
@@ -116,6 +116,13 @@ const NavBar = ({ getIsMapDetail }) => {
   const setIsMapDetail = () => {
     getIsMapDetail(false);
   };
+  const setIsSearch = () => {
+    getIsSearch(false);
+  };
+  const handleClick = () => {
+    setIsMapDetail();
+    setIsSearch();
+};
 
   return (
     <NavigationBar>
@@ -130,7 +137,7 @@ const NavBar = ({ getIsMapDetail }) => {
 
       <BarcodeIcon size="60" onClick={() => setBarcodeOpen(!isBarcodeOpen)} />
       <NavItems>
-        <NavLink onClick={setIsMapDetail}>
+        <NavLink onClick={handleClick}>
           <FaHome size="40" color="green" />홈
         </NavLink>
         <NavLink>

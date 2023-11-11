@@ -77,26 +77,7 @@ const Bookmark = ({isMapDetail, gotoBookmarkDetails}) => {
                 <p>{item.address}</p>
               </BookmarkElements>
             ))}
-            {/* <BookmarkElements onClick={gotoBookmarkDetails} >
-              <FaRegBookmark size="15" color="green" />
-              <h5>{userBookmark.parkName}</h5>
-              <p>{userBookmark.address}</p>
-            </BookmarkElements>
-            <BookmarkElements onClick={gotoBookmarkDetails} >
-              <FaRegBookmark size="15" color="green" />
-              <h5>{userBookmark.parkName}</h5>
-              <p>{userBookmark.address}</p>
-            </BookmarkElements>
-            <BookmarkElements onClick={gotoBookmarkDetails} >
-              <FaRegBookmark size="15" color="green" />
-              <h5>{userBookmark.parkName}</h5>
-              <p>{userBookmark.address}</p>
-            </BookmarkElements>
-            <BookmarkElements onClick={gotoBookmarkDetails} >
-              <FaRegBookmark size="15" color="green" />
-              <h5>{userBookmark.parkName}</h5>
-              <p>{userBookmark.address}</p>
-            </BookmarkElements> */}
+            
         </BookmarkStyled></div>
   )
 }
